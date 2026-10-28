@@ -1,0 +1,40 @@
+/* Keep the existing gold accents, while giving all store surfaces a readable light palette. */
+.storefront-light { color: #382919; padding-bottom: 88px; background-color: #fff; }
+.storefront-light :is(header, section, footer, aside) { color: #382919; }
+.storefront-light :is(header, section, footer, aside) [class*="text-[#"],
+.storefront-light :is(header, section, footer, aside) .text-white { color: #49351e; }
+.storefront-light :is(header, section, footer, aside) :is(.text-zinc-300, .text-zinc-400, .text-zinc-500) { color: #665b50; }
+.storefront-light [class*="border-white/"] { border-color: #e7ddcd; }
+
+.storefront-light :is([class~="bg-[#0a0a0a]"], [class~="bg-[#050505]"], [class~="bg-[#111]"]) { background-color: #fff; }
+.storefront-light :is([class~="bg-[#141414]"], [class~="bg-black/40"], [class~="bg-black/50"], [class~="bg-black/70"], [class~="bg-black/80"]) { background-color: #fff; }
+.storefront-light header { background-color: rgba(255,255,255,.96); box-shadow: 0 2px 18px rgba(64,40,15,.05); }
+.storefront-light footer { background-color: #fff; }
+.storefront-light article { box-shadow: 0 5px 22px rgba(82,58,21,.07); }
+.storefront-light article:hover { border-color: #c79b50; }
+.storefront-light article strong { color: #8b560c !important; }
+.storefront-light [role="tab"][aria-selected="true"],
+.storefront-light [aria-pressed="true"] { background-color: #ebbd65; color: #382919; }
+.storefront-light [aria-pressed="false"]:hover { background-color: #f3e6cc; }
+.storefront-light .hero-title { color: #8f5b12; }
+.storefront-light .font-quran { color: #986322 !important; text-shadow: none; }
+.storefront-light .hero-seal-image { background-color: #111; }
+.storefront-light .honey-button { color: #251b0c; }
+.storefront-light a:hover { color: #875710; }
+.floating-cart { bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+.social-dock { bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+.storefront-light .social-facebook { border-color: #cbdfff; background-color: #eaf2ff; color: #1877f2; }
+.storefront-light .social-instagram { border-color: #f2c5dc; background-color: #fceaf3; color: #a82d70; }
+.storefront-light .social-location { border-color: #efd39b; background-color: #fff3d9; color: #805511; }
+.storefront-light .social-whatsapp { border-color: #bde6ce; background-color: #e8f8ef; color: #168343; }
+.storefront-light .social-facebook:hover { background-color: #dbe9ff; color: #145fb4; }
+.storefront-light .social-instagram:hover { background-color: #f7d9e9; color: #89245b; }
+.storefront-light .social-location:hover { background-color: #fce8bc; color: #66430e; }
+.storefront-light .social-whatsapp:hover { background-color: #d5f2e1; color: #116b36; }
+.storefront-light .product-card { border-color: #e9dec9; background-color: #fff; box-shadow: 0 8px 28px rgba(82,58,21,.09); }
+.storefront-light .product-card:hover { border-color: #d3a64d; box-shadow: 0 12px 34px rgba(82,58,21,.15); }
+.storefront-light .product-image-panel { background: #fff; }
+.storefront-light .product-card .product-category { border-color: #ead9b7; background-color: #fff; color: #805511; }
+.storefront-light .product-card .product-price { color: #8b560c; }
+.storefront-light .quick-category { border-color: #e3d4b8; background-color: #fff; color: #60471f; }
+.storefront-light .quick-category:hover { border-color: #c8943c; background-color: #fff8e8; color: #68460c; }
