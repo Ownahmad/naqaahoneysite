@@ -103,6 +103,7 @@ const strings = {
   visitCopy: text('أبوابنا مفتوحة لكم لتجربة الأصناف بأنفسكم واختيار اللي بناسبكم. بنتشرف بزيارتكم في أي وقت.', 'Our doors are open so you can explore the varieties and choose what suits you. We would be delighted to welcome you.'),
   googleMaps: text('افتح في خرائط جوجل', 'Open in Google Maps'),
   directions: text('الوصول للموقع', 'Get directions'),
+  reviewUs: text('قيّموا محلنا على Google', 'Review us on Google'),
   footerCopy: text('عسل أردني مختار من أفضل المناحل، نقدّمه لكم بأسعار واضحة وكميات تناسب احتياجاتكم. زورونا أو اطلبوا أونلاين.', 'Selected Jordanian honey from outstanding apiaries, with clear prices and sizes for every need. Visit us or order online.'),
   quickLinks: text('روابط سريعة', 'Quick links'),
   reachUs: text('تواصلوا معنا', 'Get in touch'),
