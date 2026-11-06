@@ -38,3 +38,70 @@
 .storefront-light .product-card .product-price { color: #8b560c; }
 .storefront-light .quick-category { border-color: #e3d4b8; background-color: #fff; color: #60471f; }
 .storefront-light .quick-category:hover { border-color: #c8943c; background-color: #fff8e8; color: #68460c; }
+
+/* Warm the storefront to match the honey photography without losing its light,
+   uncluttered background or readable contrast. */
+.storefront-light {
+  background-color: #fff;
+  background-image: linear-gradient(180deg, #fff 0%, #fffdf8 48%, #fff 100%);
+}
+.storefront-light .shop-hero {
+  background-color: #fffaf0;
+}
+.storefront-light #products {
+  background: linear-gradient(180deg, #fffdf8 0%, #fff8e9 100%);
+}
+.storefront-light #our-shop,
+.storefront-light #location {
+  background-color: #fff9ed;
+}
+.storefront-light #gallery {
+  background-color: #fffdf8;
+}
+.storefront-light #contact {
+  background-color: #fff7e8;
+}
+.storefront-light .product-card {
+  border-color: #ead9ba;
+  background: linear-gradient(155deg, #fffefa 0%, #fff7e8 100%);
+  box-shadow: 0 8px 26px rgba(96, 60, 17, .09);
+}
+.storefront-light .product-card:hover {
+  border-color: #d7a647;
+  box-shadow: 0 14px 32px rgba(96, 60, 17, .15);
+}
+.storefront-light .product-image-panel {
+  background: radial-gradient(ellipse at 50% 35%, #fff 0%, #fffdf8 50%, #f8edda 100%);
+}
+.storefront-light .product-card .product-category {
+  border-color: #e7d3ac;
+  background-color: #fffaf0;
+  color: #72501e;
+}
+.storefront-light .product-card .product-price {
+  color: #74430c;
+}
+.storefront-light .product-card [role="group"] {
+  border-color: #eadcc2;
+  background-color: #fffaf1;
+}
+.storefront-light .product-card .social-whatsapp {
+  border-color: #d9e9d7;
+  background-color: #f6fbf4;
+  color: #416b43;
+}
+.storefront-light .product-card .social-whatsapp:hover {
+  background-color: #eaf5e8;
+}
+.storefront-light #products [role="tablist"] {
+  border-color: #ead9ba;
+  background-color: #fffaf1;
+}
+.storefront-light .quick-category {
+  background: linear-gradient(145deg, #fff 0%, #fff8ea 100%);
+  box-shadow: 0 4px 16px rgba(96, 60, 17, .05);
+}
+.storefront-light .floating-cart {
+  background: linear-gradient(135deg, #e8b64f 0%, #d3922d 100%);
+  box-shadow: 0 8px 24px rgba(122, 77, 17, .24);
+}
