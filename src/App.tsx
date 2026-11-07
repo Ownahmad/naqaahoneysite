@@ -16,7 +16,7 @@ const whatsapp = (message: string) => `whatsapp://send?phone=${phone}&text=${enc
 const instagramUrl = 'https://www.instagram.com/thepurehoney83';
 const facebookUrl = 'https://www.facebook.com/share/19YSRMvwz3/?mibextid=wwXIfr';
 const mapUrl = 'https://maps.app.goo.gl/8Sp9F1bWEX5653xN8';
-const googleReviewsUrl = 'https://www.google.com/maps/place/%D8%B9%D8%B3%D9%84+%D8%A7%D9%84%D9%86%D9%82%D8%A7%D8%A1%E2%80%AD/@32.0948306,36.0897955,17z/data=!3m1!4b1!4m6!3m5!1s0x151b7b000c5e5ba7:0x9ccd02a2b364cfea!8m2!3d32.0948261!4d36.0872206!16s%2Fg%2F11zfkhpxnx!9m1!1b1';
+const googleReviewsUrl = 'https://www.google.com/maps/place//data=!4m3!3m2!1s0x151b7b000c5e5ba7:0x9ccd02a2b364cfea!12e1';
 type Localized = ReturnType<typeof text>;
 type FilterKey = 'all' | 'honey' | 'bee' | 'dermoder';
 type QuantityOption = { key: string; label: Localized; grams: Localized; multiplier: number };
