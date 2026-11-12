@@ -180,7 +180,7 @@ const offers = [
   {
     name: text('بكج الشتاء', 'Winter Bundle'),
     description: text('كيلو عسل حمضيات، وعكبر، وقزحة سائلة.', '1 kg of citrus honey, propolis, and liquid black seed paste.'),
-    image: '/images/winter-bundle.webp',
+    image: '/images/winter-bundle-v2.webp',
     price: 15,
   },
   {
