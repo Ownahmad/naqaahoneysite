@@ -48,3 +48,4 @@ export const products: Product[] = [
 ];
 
 export const productPath = (id: string) => `/products/${id}/`;
+export const productThumbnail = (id: string) => `/catalog-thumbnails/${id}.webp`;

@@ -6,9 +6,9 @@ import { ToastAction } from '@/components/ui/toast';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { toast } from '@/hooks/use-toast';
 import { LanguageProvider, LanguageSwitcher, text, useI18n } from '@/i18n';
-import { ArrowLeft, ArrowRight, ArrowUpRight, Camera, ChevronLeft, ChevronRight, Facebook, Instagram, MapPin, Menu, MessageCircle, Phone, Star, X, ShoppingCart, Plus, Minus, Trash2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Facebook, Instagram, MapPin, Menu, MessageCircle, Phone, Star, X, ShoppingCart, Plus, Minus, Trash2 } from 'lucide-react';
 import { Route, Switch } from 'wouter';
-import { products, productPath, type FilterKey, type Product } from './products';
+import { products, productPath, productThumbnail, type FilterKey, type Product } from './products';
 import './light-theme.css';
 
 const queryClient = new QueryClient();
@@ -53,7 +53,7 @@ function BrandMark({ large = false, header = false }: { large?: boolean; header?
   );
 }
 
-function ProductCard({ product, onImage, onAdd }: { product: Product; onImage: () => void; onAdd: (product: Product, key: string, price: number) => void }) {
+function ProductCard({ product, onAdd }: { product: Product; onAdd: (product: Product, key: string, price: number) => void }) {
   const { t, s, money, dir } = useI18n();
   const [quantityKey, setQuantityKey] = useState(() => product.quantities.find(item => item.key === 'half')?.key ?? product.quantities[0].key);
   const selected = product.quantities.find(item => item.key === quantityKey) ?? product.quantities[0];
@@ -61,12 +61,11 @@ function ProductCard({ product, onImage, onAdd }: { product: Product; onImage: (
   const category = product.category === 'honey' ? s.honey : product.category === 'bee' ? s.beeProducts : s.dermoder;
   return (
     <article className="product-card group relative flex h-full flex-col overflow-hidden rounded-[1.35rem] border border-white/10 bg-[#0a0a0a] shadow-xl transition-all hover:-translate-y-1 hover:border-white/20">
-      <button className="focus-ring absolute inset-0 z-10 cursor-zoom-in" onClick={onImage} aria-label={`${t(s.enlarge)} ${t(product.name)}`} />
-      <div className="product-image-panel relative flex aspect-[4/5] items-center justify-center overflow-hidden p-3">
-        <img src={product.image} alt={t(product.name)} className="image-lift h-full w-full object-contain" />
+      <a href={productPath(product.id)} className="product-image-panel focus-ring relative flex aspect-[4/5] items-center justify-center overflow-hidden p-3">
+        <img src={productThumbnail(product.id)} alt={t(product.name)} className="image-lift h-full w-full object-contain" />
         {product.category !== 'honey' && <span className="absolute end-3 top-3 rounded-full border border-[#f1d28e]/20 bg-black/80 px-3 py-1 text-xs font-bold text-[#f4d58b]">{t(product.tone)}</span>}
-        <span className="absolute bottom-3 start-3 flex h-9 w-9 items-center justify-center rounded-full bg-[#f7e4b3] text-black opacity-0 group-hover:opacity-100"><Camera size={16} /></span>
-      </div>
+        <span className="absolute bottom-3 start-3 flex h-9 w-9 items-center justify-center rounded-full bg-[#f7e4b3] text-black opacity-0 group-hover:opacity-100"><ArrowUpRight size={16} aria-hidden="true" /></span>
+      </a>
       <div className="relative z-20 flex min-h-[136px] flex-1 items-end justify-between gap-3 p-4">
         <div><span className="product-category mb-2 inline-flex rounded-full border px-2.5 py-1 text-[11px] font-bold">{t(category)}</span><h3 className="font-display text-xl font-bold leading-tight text-[#f2dfb3]"><a className="focus-ring hover:underline" href={productPath(product.id)}>{t(product.name)}</a></h3><p className="mt-2 text-sm text-zinc-400">{t(product.description)}</p></div>
         <div className="shrink-0 text-end" dir={dir}><strong className="product-price font-display text-2xl">{money(price)}</strong><span className="block text-[10px] font-bold text-zinc-400">{t(selected.label)}</span></div>
@@ -82,11 +81,10 @@ function ProductCard({ product, onImage, onAdd }: { product: Product; onImage: (
   );
 }
 
-function ProductCatalog({ filter, setFilter, onImage, onAdd }: { filter: FilterKey; setFilter: (key: FilterKey) => void; onImage: (items: GalleryItem[], index: number) => void; onAdd: (product: Product, key: string, price: number) => void }) {
+function ProductCatalog({ filter, setFilter, onAdd }: { filter: FilterKey; setFilter: (key: FilterKey) => void; onAdd: (product: Product, key: string, price: number) => void }) {
   const { t, s } = useI18n();
   const filters: { key: FilterKey; label: Localized }[] = [{ key: 'all', label: s.all }, { key: 'honey', label: s.honey }, { key: 'bee', label: s.beeProducts }, { key: 'dermoder', label: s.dermoder }];
   const visible = filter === 'all' ? products : products.filter(product => product.category === filter);
-  const items = visible.map(product => ({ src: product.image, label: product.name }));
   return (
     <section id="products" className="scroll-mt-6 px-5 py-12 text-[#f1dfb5] lg:px-10 lg:py-14">
       <div className="mx-auto max-w-7xl">
@@ -96,7 +94,7 @@ function ProductCatalog({ filter, setFilter, onImage, onAdd }: { filter: FilterK
             {filters.map(item => <button key={item.key} role="tab" aria-selected={filter === item.key} onClick={() => setFilter(item.key)} className={`focus-ring rounded-full px-4 py-2.5 text-sm font-extrabold ${filter === item.key ? 'bg-[#d69b39] text-black' : 'text-[#d8c39a] hover:bg-white/10'}`}>{t(item.label)}</button>)}
           </div>
         </div>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{visible.map((product, index) => <ProductCard key={product.id} product={product} onImage={() => onImage(items, index)} onAdd={onAdd} />)}</div>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{visible.map(product => <ProductCard key={product.id} product={product} onAdd={onAdd} />)}</div>
       </div>
     </section>
   );
@@ -149,7 +147,7 @@ function Cart({ open, close, cart, update, remove, clear }: { open: boolean; clo
         <div className="flex-1 overflow-y-auto p-5">{cart.length === 0 ? <div className="flex h-full flex-col items-center justify-center text-zinc-500"><ShoppingCart size={48} className="mb-4 opacity-20" /><p>{t(s.emptyCart)}</p></div> :
           <div className="grid gap-4">{cart.map(item => {
             const product = products.find(entry => entry.id === item.productId)!; const quantity = product.quantities.find(entry => entry.key === item.quantityKey)!;
-            return <div key={item.id} className="flex gap-3 rounded-xl border border-white/5 bg-[#141414] p-3"><img src={product.image} alt={t(product.name)} className="h-20 w-20 rounded-lg bg-[#050505] object-contain p-2" /><div className="flex min-w-0 flex-1 flex-col justify-between"><div><h3 className="font-bold text-[#f2dfb3]">{t(product.name)}</h3><div className="text-xs text-[#d5a955]">{t(quantity.label)}</div></div><div className="mt-2 flex items-center justify-between gap-2"><div className="flex items-center gap-2 rounded-lg bg-[#050505] px-2 py-1"><button onClick={() => update(item.id, -1)} aria-label={t(s.decrease)}><Minus size={14} /></button><span>{item.count}</span><button onClick={() => update(item.id, 1)} aria-label={t(s.increase)}><Plus size={14} /></button></div><strong className="text-[#efbd4f]">{money(item.price * item.count)}</strong><button onClick={() => remove(item.id)} className="text-red-400" aria-label={t(s.remove)}><Trash2 size={16} /></button></div></div></div>;
+            return <div key={item.id} className="flex gap-3 rounded-xl border border-white/5 bg-[#141414] p-3"><img src={productThumbnail(product.id)} alt={t(product.name)} className="h-20 w-20 rounded-lg bg-[#050505] object-contain p-2" /><div className="flex min-w-0 flex-1 flex-col justify-between"><div><h3 className="font-bold text-[#f2dfb3]">{t(product.name)}</h3><div className="text-xs text-[#d5a955]">{t(quantity.label)}</div></div><div className="mt-2 flex items-center justify-between gap-2"><div className="flex items-center gap-2 rounded-lg bg-[#050505] px-2 py-1"><button onClick={() => update(item.id, -1)} aria-label={t(s.decrease)}><Minus size={14} /></button><span>{item.count}</span><button onClick={() => update(item.id, 1)} aria-label={t(s.increase)}><Plus size={14} /></button></div><strong className="text-[#efbd4f]">{money(item.price * item.count)}</strong><button onClick={() => remove(item.id)} className="text-red-400" aria-label={t(s.remove)}><Trash2 size={16} /></button></div></div></div>;
           })}</div>}</div>
         {cart.length > 0 && <div className="border-t border-white/10 p-5"><div className="mb-4 flex items-center justify-between font-bold"><span>{t(s.total)}</span><span className="font-display text-2xl text-[#efbd4f]">{money(total)}</span></div><WhatsAppLink message={message} className="honey-button flex w-full items-center justify-center gap-2 rounded-xl bg-[#d69b39] py-3.5 font-extrabold text-black">{t(s.checkout)} <MessageCircle size={18} /></WhatsAppLink><button onClick={clear} className="mt-3 w-full py-2 text-sm font-bold text-zinc-500 hover:text-white">{t(s.clearCart)}</button></div>}
       </aside>
@@ -235,7 +233,7 @@ function Home() {
         </div>
       </section>
 
-      <ProductCatalog filter={filter} setFilter={setFilter} onImage={(items, index) => setLightbox({ items, index })} onAdd={add} />
+      <ProductCatalog filter={filter} setFilter={setFilter} onAdd={add} />
 
       <section id="our-shop" className="border-t border-white/5 px-5 py-20 text-[#f4e1b4] lg:px-10 lg:py-28"><div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[.9fr_1.1fr]"><div className="order-2 grid grid-cols-2 gap-4 lg:order-1"><div className="relative col-span-2 overflow-hidden rounded-[2rem] border border-white/10 bg-[#0a0a0a] p-2"><img src={gallery[3].src} alt={t(gallery[3].label)} className="h-[300px] w-full rounded-[1.2rem] object-cover sm:h-[390px]" /><span className="absolute bottom-7 end-7 rounded-full bg-black/80 px-4 py-2 text-xs font-bold text-[#e0af4c]">{t(s.insideShop)}</span></div><img src={gallery[4].src} alt={t(gallery[4].label)} className="h-36 w-full rounded-2xl border border-white/10 object-cover sm:h-48" /><img src={gallery[5].src} alt={t(gallery[5].label)} className="h-36 w-full rounded-2xl border border-white/10 object-cover sm:h-48" /></div>
         <div className="order-1 lg:order-2"><span className="mb-4 block text-xs font-extrabold tracking-[.2em] text-[#e0af4c]">{t(s.shopEyebrow)}</span><h2 className="font-display text-4xl leading-tight text-white sm:text-6xl">{t(s.fromShelves)}<br /><span className="text-[#f5d994]">{t(s.toHomes)}</span></h2><p className="mt-7 max-w-xl text-lg leading-9 text-zinc-300">{t(s.shopCopy)}</p><div className="mt-9 grid grid-cols-2 gap-4 border-t border-white/10 pt-7"><div><strong className="block font-display text-2xl text-[#e6b54d]">{t(s.realPhotos)}</strong><span className="text-sm text-zinc-400">{t(s.directShop)}</span></div><div><strong className="block font-display text-2xl text-[#e6b54d]">{t(s.yourChoice)}</strong><span className="text-sm text-zinc-400">{t(s.kiloLess)}</span></div></div><a href="#gallery" className="focus-ring mt-10 inline-flex items-center gap-3 border-b border-[#e1b34f]/50 pb-2 font-bold text-[#f2cc7d]">{t(s.viewPlace)} <ArrowForward size={18} /></a></div></div></section>
