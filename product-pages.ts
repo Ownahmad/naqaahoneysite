@@ -58,7 +58,7 @@ function renderProduct(product: Product) {
 <body>
   <header><a href="/"><img src="/logo.png" alt="" width="48" height="48">عسل النقاء</a></header>
   <main>
-    <img class="product-photo" src="${escapeHtml(product.image)}" alt="${name}">
+    <img class="product-photo" src="${escapeHtml(product.image)}" alt="${name} من عسل النقاء">
     <div>
       <a href="/#products">جميع المنتجات</a>
       <h1>${name}</h1>
@@ -81,9 +81,17 @@ export function productPages(): Plugin {
         await mkdir(directory, { recursive: true });
         await writeFile(resolve(directory, 'index.html'), renderProduct(product), 'utf8');
       }));
-      const urls = [site + '/', ...products.map(product => site + productPath(product.id))];
-      const entries = urls.map(url => `  <url><loc>${url}</loc></url>`).join('\n');
-      await writeFile(resolve(dir, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries}\n</urlset>\n`, 'utf8');
+      const entries = products.map(product => `  <url>
+    <loc>${site + productPath(product.id)}</loc>
+    <image:image><image:loc>${escapeHtml(site + product.image)}</image:loc></image:image>
+  </url>`).join('\n');
+      await writeFile(resolve(dir, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url><loc>${site}/</loc></url>
+${entries}
+</urlset>
+`, 'utf8');
     },
   };
 }
