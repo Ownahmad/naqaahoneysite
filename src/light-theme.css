@@ -99,3 +99,14 @@
 
 .storefront-light .shop-hero .hero-title { color: #ffcd73; }
 .storefront-light .shop-hero a[href*="google.com/maps"] { color: var(--store-brown); }
+
+.storefront-light .favorite-star {
+  color: var(--store-brown);
+  background-color: var(--store-paper);
+  border-color: var(--store-line);
+}
+.storefront-light .favorite-star[aria-pressed="true"] {
+  color: #ad6a00;
+  background-color: #fff1cb;
+  border-color: var(--store-gold);
+}

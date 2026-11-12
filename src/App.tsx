@@ -19,6 +19,17 @@ const facebookUrl = 'https://www.facebook.com/share/19YSRMvwz3/?mibextid=wwXIfr'
 const mapUrl = 'https://maps.app.goo.gl/8Sp9F1bWEX5653xN8';
 const googleReviewsUrl = 'https://www.google.com/maps/place//data=!4m3!3m2!1s0x151b7b000c5e5ba7:0x9ccd02a2b364cfea!12e1';
 type Localized = ReturnType<typeof text>;
+type CatalogFilter = FilterKey | 'favorites';
+const favoritesKey = 'naqaa-favorite-products';
+
+function readFavorites(): string[] {
+  try {
+    const saved: unknown = JSON.parse(window.localStorage.getItem(favoritesKey) ?? '[]');
+    return Array.isArray(saved) ? products.filter(product => saved.includes(product.id)).map(product => product.id) : [];
+  } catch {
+    return [];
+  }
+}
 type GalleryItem = { src: string; label: Localized };
 
 const gallery: GalleryItem[] = [
@@ -53,7 +64,7 @@ function BrandMark({ large = false, header = false }: { large?: boolean; header?
   );
 }
 
-function ProductCard({ product, onAdd }: { product: Product; onAdd: (product: Product, key: string, price: number) => void }) {
+function ProductCard({ product, favorite, onFavorite, onAdd }: { product: Product; favorite: boolean; onFavorite: () => void; onAdd: (product: Product, key: string, price: number) => void }) {
   const { t, s, money, dir } = useI18n();
   const [quantityKey, setQuantityKey] = useState(() => product.quantities.find(item => item.key === 'half')?.key ?? product.quantities[0].key);
   const selected = product.quantities.find(item => item.key === quantityKey) ?? product.quantities[0];
@@ -61,6 +72,9 @@ function ProductCard({ product, onAdd }: { product: Product; onAdd: (product: Pr
   const category = product.category === 'honey' ? s.honey : product.category === 'bee' ? s.beeProducts : s.dermoder;
   return (
     <article className="product-card group relative flex h-full flex-col overflow-hidden rounded-[1.35rem] border border-white/10 bg-[#0a0a0a] shadow-xl transition-all hover:-translate-y-1 hover:border-white/20">
+      <button type="button" onClick={onFavorite} aria-pressed={favorite} aria-label={`${t(text('المفضلة', 'Favorites'))} · ${t(product.name)}`} className="favorite-star focus-ring absolute start-3 top-3 z-10 grid h-10 w-10 place-items-center rounded-full border">
+        <Star size={21} fill={favorite ? 'currentColor' : 'none'} aria-hidden="true" />
+      </button>
       <a href={productPath(product.id)} className="product-image-panel focus-ring relative flex aspect-[4/5] items-center justify-center overflow-hidden p-3">
         <img src={productThumbnail(product.id)} alt={t(product.name)} className="image-lift h-full w-full object-contain" />
         {product.category !== 'honey' && <span className="absolute end-3 top-3 rounded-full border border-[#f1d28e]/20 bg-black/80 px-3 py-1 text-xs font-bold text-[#f4d58b]">{t(product.tone)}</span>}
@@ -81,20 +95,24 @@ function ProductCard({ product, onAdd }: { product: Product; onAdd: (product: Pr
   );
 }
 
-function ProductCatalog({ filter, setFilter, onAdd }: { filter: FilterKey; setFilter: (key: FilterKey) => void; onAdd: (product: Product, key: string, price: number) => void }) {
+function ProductCatalog({ filter, setFilter, favorites, onFavorite, onAdd }: { filter: CatalogFilter; setFilter: (key: CatalogFilter) => void; favorites: string[]; onFavorite: (id: string) => void; onAdd: (product: Product, key: string, price: number) => void }) {
   const { t, s } = useI18n();
-  const filters: { key: FilterKey; label: Localized }[] = [{ key: 'all', label: s.all }, { key: 'honey', label: s.honey }, { key: 'bee', label: s.beeProducts }, { key: 'dermoder', label: s.dermoder }];
-  const visible = filter === 'all' ? products : products.filter(product => product.category === filter);
+  const filters: { key: CatalogFilter; label: Localized }[] = [{ key: 'all', label: s.all }, { key: 'honey', label: s.honey }, { key: 'bee', label: s.beeProducts }, { key: 'dermoder', label: s.dermoder }, { key: 'favorites', label: text('المفضلة', 'Favorites') }];
+  const visible = products.filter(product => {
+    if (filter === 'favorites') return favorites.includes(product.id);
+    return filter === 'all' || product.category === filter;
+  });
   return (
     <section id="products" className="scroll-mt-6 px-5 py-12 text-[#f1dfb5] lg:px-10 lg:py-14">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex flex-col justify-between gap-7 lg:flex-row lg:items-end">
           <div><span className="mb-3 block text-xs font-extrabold tracking-[.2em] text-[#d5a955]">{t(s.shelves)}</span><h2 className="font-display text-4xl text-[#f3dfae] sm:text-5xl">{t(s.products)}</h2><p className="mt-3 max-w-2xl text-zinc-300">{t(s.productIntro)}</p></div>
           <div className="flex flex-wrap gap-2 rounded-2xl border border-white/10 bg-black/70 p-1.5" role="tablist" aria-label={t(s.filterProducts)}>
-            {filters.map(item => <button key={item.key} role="tab" aria-selected={filter === item.key} onClick={() => setFilter(item.key)} className={`focus-ring rounded-full px-4 py-2.5 text-sm font-extrabold ${filter === item.key ? 'bg-[#d69b39] text-black' : 'text-[#d8c39a] hover:bg-white/10'}`}>{t(item.label)}</button>)}
+            {filters.map(item => <button key={item.key} role="tab" aria-selected={filter === item.key} onClick={() => setFilter(item.key)} className={`focus-ring rounded-full px-4 py-2.5 text-sm font-extrabold ${filter === item.key ? 'bg-[#d69b39] text-black' : 'text-[#d8c39a] hover:bg-white/10'}`}>{item.key === 'favorites' && <Star className="me-1 inline-block" size={14} aria-hidden="true" />}{t(item.label)}</button>)}
           </div>
         </div>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{visible.map(product => <ProductCard key={product.id} product={product} onAdd={onAdd} />)}</div>
+        {filter === 'favorites' && visible.length === 0 && <p className="rounded-2xl border border-white/10 p-5">{t(text('المفضلة فارغة. اضغط على نجمة أي منتج لإضافته.', 'Your favorites list is empty. Select a product’s star to save it.'))}</p>}
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{visible.map(product => <ProductCard key={product.id} product={product} favorite={favorites.includes(product.id)} onFavorite={() => onFavorite(product.id)} onAdd={onAdd} />)}</div>
       </div>
     </section>
   );
@@ -158,8 +176,20 @@ function Cart({ open, close, cart, update, remove, clear }: { open: boolean; clo
 function Home() {
   const { t, s, language, dir } = useI18n();
   const [menu, setMenu] = useState(false);
-  const [filter, setFilter] = useState<FilterKey>('all');
+  const [filter, setFilter] = useState<CatalogFilter>('all');
   const [lightbox, setLightbox] = useState<{ items: GalleryItem[]; index: number } | null>(null);
+  const [favorites, setFavorites] = useState(readFavorites);
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(favoritesKey, JSON.stringify(favorites));
+    } catch {
+      // Favorites still work for the current visit when storage is unavailable.
+    }
+  }, [favorites]);
+
+  const toggleFavorite = (id: string) => {
+    setFavorites(current => current.includes(id) ? current.filter(saved => saved !== id) : [...current, id]);
+  };
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [cartAnimation, setCartAnimation] = useState(0);
@@ -225,9 +255,9 @@ function Home() {
           </nav>
         </div>
           <div className="hero-visual flex min-w-0 flex-col items-center">
-            <a href={productPath('spring')} className="hero-product focus-ring" aria-label={t(text('عسل أزهار الربيع', 'Spring Blossom Honey'))}>
-              <img src="/images/spring-honey-apiary.webp" alt={t(text('مرطبانات عسل أزهار الربيع في المنحل', 'Jars of spring blossom honey at the apiary'))} width="648" height="960" fetchPriority="high" />
-            </a>
+            <div className="hero-product">
+              <img src="/images/naqaa-shop-emblem.jpg" alt={t(text('شعار عسل النقاء داخل المحل', 'Pure Honey emblem inside the shop'))} width="1365" height="768" fetchPriority="high" />
+            </div>
             <a href="/images/quality-seal-black.jpg" className="hero-seal focus-ring flex min-w-0 items-center gap-3">
             <div className="hero-seal-image relative aspect-square overflow-hidden rounded-full border border-[#d5a955]/50 bg-[#111] shadow-[0_8px_28px_rgba(213,169,85,.18)]">
               <img src="/images/quality-seal-black.jpg" alt={t(text('ختم نقابة النحالين الأردنيين ورمز QR للتتبع', 'Jordanian Beekeepers Association seal and traceability QR code'))} className="absolute h-auto max-w-none" style={{ width: '160%', left: '-33.33%', top: '-63.33%' }} />
@@ -241,7 +271,7 @@ function Home() {
         </div>
       </section>
 
-      <ProductCatalog filter={filter} setFilter={setFilter} onAdd={add} />
+      <ProductCatalog filter={filter} setFilter={setFilter} favorites={favorites} onFavorite={toggleFavorite} onAdd={add} />
 
       <section id="our-shop" className="border-t border-white/5 px-5 py-20 text-[#f4e1b4] lg:px-10 lg:py-28"><div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[.9fr_1.1fr]"><div className="order-2 grid grid-cols-2 gap-4 lg:order-1"><div className="relative col-span-2 overflow-hidden rounded-[2rem] border border-white/10 bg-[#0a0a0a] p-2"><img src={gallery[3].src} alt={t(gallery[3].label)} className="h-[300px] w-full rounded-[1.2rem] object-cover sm:h-[390px]" /><span className="absolute bottom-7 end-7 rounded-full bg-black/80 px-4 py-2 text-xs font-bold text-[#e0af4c]">{t(s.insideShop)}</span></div><img src={gallery[4].src} alt={t(gallery[4].label)} className="h-36 w-full rounded-2xl border border-white/10 object-cover sm:h-48" /><img src={gallery[5].src} alt={t(gallery[5].label)} className="h-36 w-full rounded-2xl border border-white/10 object-cover sm:h-48" /></div>
         <div className="order-1 lg:order-2"><span className="mb-4 block text-xs font-extrabold tracking-[.2em] text-[#e0af4c]">{t(s.shopEyebrow)}</span><h2 className="font-display text-4xl leading-tight text-white sm:text-6xl">{t(s.fromShelves)}<br /><span className="text-[#f5d994]">{t(s.toHomes)}</span></h2><p className="mt-7 max-w-xl text-lg leading-9 text-zinc-300">{t(s.shopCopy)}</p><div className="mt-9 grid grid-cols-2 gap-4 border-t border-white/10 pt-7"><div><strong className="block font-display text-2xl text-[#e6b54d]">{t(s.realPhotos)}</strong><span className="text-sm text-zinc-400">{t(s.directShop)}</span></div><div><strong className="block font-display text-2xl text-[#e6b54d]">{t(s.yourChoice)}</strong><span className="text-sm text-zinc-400">{t(s.kiloLess)}</span></div></div><a href="#gallery" className="focus-ring mt-10 inline-flex items-center gap-3 border-b border-[#e1b34f]/50 pb-2 font-bold text-[#f2cc7d]">{t(s.viewPlace)} <ArrowForward size={18} /></a></div></div></section>
