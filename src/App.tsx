@@ -181,6 +181,7 @@ const offers = [
     name: text('بكج الشتاء', 'Winter Bundle'),
     description: text('كيلو عسل حمضيات، وعكبر، وقزحة سائلة.', '1 kg of citrus honey, propolis, and liquid black seed paste.'),
     image: '/images/winter-bundle-v2.webp',
+    artworkClass: 'winter-bundle-artwork',
     price: 15,
   },
   {
@@ -188,7 +189,7 @@ const offers = [
     description: text('عسل جرجير مع 10 غرامات من غذاء ملكات النحل البودرة. السعر شامل التوصيل لكل المملكة.', 'Arugula honey with 10 g of powdered royal jelly. Includes delivery throughout Jordan.'),
     image: '/images/power-bundle.webp',
     price: 15,
-    hideArtworkFooter: true,
+    artworkClass: 'bundle-photo-cropped',
   },
 ];
 
@@ -212,7 +213,7 @@ function Offers() {
                   {t(text('اطلب البكج', 'Order this bundle'))} <MessageCircle size={18} aria-hidden="true" />
                 </WhatsAppLink>
               </div>
-              <div className={`bundle-photo mx-auto w-full max-w-52 overflow-hidden rounded-2xl${offer.hideArtworkFooter ? ' bundle-photo-cropped' : ''}`}>
+              <div className={`bundle-photo mx-auto w-full max-w-52 overflow-hidden rounded-2xl ${offer.artworkClass}`}>
                 <img src={offer.image} alt={t(offer.name)} width="650" height="1165" loading="lazy" decoding="async" className="block h-auto w-full" />
               </div>
             </article>

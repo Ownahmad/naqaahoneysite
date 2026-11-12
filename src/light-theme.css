@@ -119,3 +119,18 @@
 .bundle-gift { background: var(--store-gold); color: var(--store-brown); }
 .bundle-price { color: #ffd98f; }
 .bundle-photo-cropped { aspect-ratio: 768 / 1282; }
+
+/* Restore the dot under the final jeem in the upper title of the winter artwork. */
+.winter-bundle-artwork { position: relative; }
+.winter-bundle-artwork::after {
+  content: "";
+  position: absolute;
+  left: 76.5%;
+  top: 25.75%;
+  width: 1.05%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%) rotate(45deg);
+  border-radius: 18%;
+  background: #f2efdf;
+  pointer-events: none;
+}
