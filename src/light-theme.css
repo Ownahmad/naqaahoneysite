@@ -1,7 +1,7 @@
 .storefront-light {
-  --store-cream: #fff8eb;
-  --store-brown: #3b2618;
-  --store-gold: #e5a52d;
+  --store-cream: #fff7e8;
+  --store-brown: #2d1b12;
+  --store-gold: #d99a2b;
   --store-gold-hover: #efb74e;
   --store-price: #865309;
   --store-paper: #fffcf5;
@@ -15,10 +15,10 @@
   padding-bottom: 88px;
 }
 
-.storefront-light :is(header, #our-shop, #contact) {
+.storefront-light :is(header, .shop-hero, #our-shop, #contact) {
   --store-ink: var(--store-cream);
   --store-muted: #e3cdb6;
-  --store-surface: #4d3525;
+  --store-surface: #40291d;
   --store-line: #80634c;
 
   color: var(--store-ink);
@@ -33,12 +33,11 @@
   background-color: var(--store-surface);
 }
 
-.storefront-light .shop-hero { background-color: var(--store-cream); }
 .storefront-light .hero-shade {
-  background: linear-gradient(90deg, var(--store-cream), transparent 80%);
+  background: linear-gradient(90deg, var(--store-brown), transparent 85%);
 }
 .storefront-light[dir="rtl"] .hero-shade {
-  background: linear-gradient(270deg, var(--store-cream), transparent 80%);
+  background: linear-gradient(270deg, var(--store-brown), transparent 85%);
 }
 .storefront-light .hero-seal-image { background-color: #111; }
 .storefront-light .font-quran { text-shadow: none; }
@@ -65,10 +64,11 @@
 .storefront-light .product-card .product-price { color: var(--store-price); }
 .storefront-light .quick-category {
   border-color: var(--store-line);
-  background-color: var(--store-paper);
+  background-color: var(--store-surface);
   color: var(--store-ink);
 }
-.storefront-light .quick-category:hover,
+.storefront-light .quick-category:hover { background-color: #503426; }
+
 .storefront-light [role="tab"][aria-selected="false"]:hover,
 .storefront-light [aria-pressed="false"]:hover {
   background-color: #f3e6d2;
@@ -96,3 +96,6 @@
 
 .floating-cart { bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
 .social-dock { bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+
+.storefront-light .shop-hero .hero-title { color: #ffcd73; }
+.storefront-light .shop-hero a[href*="google.com/maps"] { color: var(--store-brown); }

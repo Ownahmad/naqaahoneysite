@@ -162,9 +162,11 @@ function Home() {
   const [lightbox, setLightbox] = useState<{ items: GalleryItem[]; index: number } | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [cartAnimation, setCartAnimation] = useState(0);
   const nav = [{ href: '#products', label: s.honey, filter: 'honey' as FilterKey }, { href: '#products', label: s.beeProducts, filter: 'bee' as FilterKey }, { href: '#products', label: s.dermoder, filter: 'dermoder' as FilterKey }, { href: '#our-shop', label: s.shop }, { href: '#location', label: s.location }, { href: '#contact', label: s.contact }];
   const add = (product: Product, quantityKey: string, price: number) => {
     const id = `${product.id}-${quantityKey}`; setCart(current => current.some(item => item.id === id) ? current.map(item => item.id === id ? { ...item, count: item.count + 1 } : item) : [...current, { id, productId: product.id, quantityKey, price, count: 1 }]);
+    setCartAnimation(current => current + 1);
     const quantity = product.quantities.find(item => item.key === quantityKey)!;
     toast({ title: t(s.added), description: `${t(product.name)} · ${t(quantity.label)}`, duration: 2500, className: 'border-[#d69b39]/40 bg-white text-[#49351e]', action: <ToastAction altText={t(s.openCart)} onClick={() => setCartOpen(true)} className="border-[#d69b39]/50 bg-[#d69b39] font-extrabold text-black">{t(s.openCart)}</ToastAction> });
   };
@@ -173,7 +175,7 @@ function Home() {
     <main id="top" dir={dir} className="storefront-light overflow-hidden">
       <Cart open={cartOpen} close={() => setCartOpen(false)} cart={cart} update={(id, delta) => setCart(items => items.map(item => item.id === id ? { ...item, count: Math.max(1, item.count + delta) } : item))} remove={id => setCart(items => items.filter(item => item.id !== id))} clear={() => setCart([])} />
       {!cartOpen && !lightbox && <button type="button" onClick={() => setCartOpen(true)} aria-label={t(s.openCart)} data-testid="button-floating-cart" className="floating-cart focus-ring fixed end-4 z-40 flex items-center gap-2 rounded-full border border-[#b77c24]/30 bg-[#d99c37] px-3 py-3.5 font-bold text-[#241a0f] shadow-xl transition-transform hover:-translate-y-1 sm:end-6 sm:gap-3 sm:px-5">
-        <ShoppingCart size={22} />
+        <ShoppingCart key={cartAnimation} size={22} className={cartAnimation ? "cart-added-icon" : undefined} aria-hidden="true" />
         <span>{t(s.cart)}</span>
         <span className="flex h-7 min-w-7 items-center justify-center rounded-full bg-white px-2 text-sm" dir="ltr">{cart.reduce((sum, item) => sum + item.count, 0)}</span>
       </button>}
@@ -204,6 +206,7 @@ function Home() {
 
       <section className="shop-hero relative overflow-hidden text-[#f7e4b5]">
         <img src="/images/IMG-20260913-WA0031_1789289463645.jpg" alt={t(gallery[0].label)} className="absolute inset-0 h-full w-full object-cover opacity-[.08]" /><div className="absolute inset-0 hero-shade" />
+        <div className="hero-gold-glow" aria-hidden="true" />
         <div dir="rtl" className="hero-layout relative z-10 mx-auto max-w-7xl px-5 lg:px-10"><div dir={dir} className="hero-copy min-w-0 animate-rise-in"><p className="mb-4 flex items-center gap-3 text-sm font-bold tracking-[.12em] text-[#f0c56d]"><span className="h-px w-12 bg-[#f0c56d]" />{t(s.jordan)}</p><h1 className="hero-title text-[#edb547]">{t(s.brand)}<span className="block text-[.55em] text-white">{t(s.heroSub)}</span></h1><p className="hero-description mt-5 max-w-lg text-zinc-300">{t(s.heroCopy)}</p>
           <div className="mt-6 flex flex-wrap items-center gap-3"><a href="#products" className="honey-button focus-ring inline-flex items-center gap-3 rounded-xl bg-[#d99c37] px-5 py-3.5 font-extrabold text-black">{t(s.browse)} <ArrowForward size={18} /></a><a href="#our-shop" className="focus-ring inline-flex items-center gap-3 rounded-xl border border-white/20 bg-black/40 px-5 py-3.5 font-bold text-white">{t(s.knowShop)} <ArrowUpRight size={18} /></a><a href={googleReviewsUrl} target="_blank" rel="noreferrer" className="focus-ring inline-flex items-center gap-2 rounded-xl border border-[#e0af4c]/50 bg-[#fff2d8] px-4 py-3.5 font-extrabold text-[#624115] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#f5dfb7]"><Star size={18} fill="currentColor" />{t(s.googleReviews)}</a></div>
           <div className="hero-verse mt-3 w-full max-w-full text-center">
@@ -214,21 +217,26 @@ function Home() {
             <span className="mb-2 block text-xs font-bold text-[#72572b]">{t(s.quickBrowse)}</span>
             <div className="grid grid-cols-3 gap-2">
               {[
-                { key: 'honey' as FilterKey, label: s.honey, image: products[0].image },
-                { key: 'bee' as FilterKey, label: s.beeProducts, image: products.find(product => product.id === 'royal-jelly')!.image },
-                { key: 'dermoder' as FilterKey, label: s.dermoder, image: products.find(product => product.category === 'dermoder')!.image },
+                { key: 'honey' as FilterKey, label: s.honey, image: productThumbnail(products[0].id) },
+                { key: 'bee' as FilterKey, label: s.beeProducts, image: productThumbnail('royal-jelly') },
+                { key: 'dermoder' as FilterKey, label: s.dermoder, image: productThumbnail(products.find(product => product.category === 'dermoder')!.id) },
               ].map(item => <a key={item.key} href="#products" onClick={() => setFilter(item.key)} data-testid={`link-quick-category-${item.key}`} className="quick-category focus-ring flex flex-col items-center gap-2 rounded-2xl border p-2.5 text-center text-xs font-bold transition-colors hover:-translate-y-0.5 sm:text-sm"><img src={item.image} alt="" className="h-14 w-full rounded-lg object-contain" /><span>{t(item.label)}</span></a>)}
             </div>
           </nav>
         </div>
-          <div className="hero-seal flex min-w-0 flex-col items-center">
+          <div className="hero-visual flex min-w-0 flex-col items-center">
+            <a href={productPath('spring')} className="hero-product focus-ring" aria-label={t(text('عسل أزهار الربيع', 'Spring Blossom Honey'))}>
+              <img src="/images/spring-honey-apiary.webp" alt={t(text('مرطبانات عسل أزهار الربيع في المنحل', 'Jars of spring blossom honey at the apiary'))} width="648" height="960" fetchPriority="high" />
+            </a>
+            <a href="/images/quality-seal-black.jpg" className="hero-seal focus-ring flex min-w-0 items-center gap-3">
             <div className="hero-seal-image relative aspect-square overflow-hidden rounded-full border border-[#d5a955]/50 bg-[#111] shadow-[0_8px_28px_rgba(213,169,85,.18)]">
               <img src="/images/quality-seal-black.jpg" alt={t(text('ختم نقابة النحالين الأردنيين ورمز QR للتتبع', 'Jordanian Beekeepers Association seal and traceability QR code'))} className="absolute h-auto max-w-none" style={{ width: '160%', left: '-33.33%', top: '-63.33%' }} />
             </div>
             <div dir="ltr" className="mt-2 flex items-center justify-center gap-2">
               <strong className="text-base font-semibold text-[#d9c394] lg:text-lg">{t(text('الفحص المخبري', 'Laboratory testing'))}</strong>
-              <img src="/images/lab-arrow-gold.png" alt="" aria-hidden="true" className="h-16 w-12 object-contain" />
+              <img src="/images/lab-arrow-gold.png" alt="" aria-hidden="true" className="h-12 w-9 object-contain" />
             </div>
+            </a>
           </div>
         </div>
       </section>
