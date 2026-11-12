@@ -110,3 +110,12 @@
   background-color: #fff1cb;
   border-color: var(--store-gold);
 }
+
+.bundle-offer {
+  background: radial-gradient(ellipse at 10% 12%, #84521880, transparent 66%), var(--store-brown);
+  color: var(--store-cream);
+  border-color: #96683c;
+}
+.bundle-gift { background: var(--store-gold); color: var(--store-brown); }
+.bundle-price { color: #ffd98f; }
+.bundle-photo-cropped { aspect-ratio: 768 / 1282; }
