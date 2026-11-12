@@ -8,6 +8,7 @@ import { toast } from '@/hooks/use-toast';
 import { LanguageProvider, LanguageSwitcher, text, useI18n } from '@/i18n';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Camera, ChevronLeft, ChevronRight, Facebook, Instagram, MapPin, Menu, MessageCircle, Phone, Star, X, ShoppingCart, Plus, Minus, Trash2 } from 'lucide-react';
 import { Route, Switch } from 'wouter';
+import { products, productPath, type FilterKey, type Product } from './products';
 import './light-theme.css';
 
 const queryClient = new QueryClient();
@@ -18,52 +19,7 @@ const facebookUrl = 'https://www.facebook.com/share/19YSRMvwz3/?mibextid=wwXIfr'
 const mapUrl = 'https://maps.app.goo.gl/8Sp9F1bWEX5653xN8';
 const googleReviewsUrl = 'https://www.google.com/maps/place//data=!4m3!3m2!1s0x151b7b000c5e5ba7:0x9ccd02a2b364cfea!12e1';
 type Localized = ReturnType<typeof text>;
-type FilterKey = 'all' | 'honey' | 'bee' | 'dermoder';
-type QuantityOption = { key: string; label: Localized; grams: Localized; multiplier: number };
-type Product = { id: string; name: Localized; price: number; image: string; category: FilterKey; tone: Localized; quantities: QuantityOption[] };
 type GalleryItem = { src: string; label: Localized };
-
-const quantities = {
-  kilo: { key: 'kilo', label: text('1 kg', '1 kg'), grams: text('1 kg', '1 kg'), multiplier: 1 },
-  half: { key: 'half', label: text('500 g', '500 g'), grams: text('500 g', '500 g'), multiplier: .5 },
-  ounce: { key: 'ounce', label: text('وقية (250 g)', '250 g'), grams: text('وقية (250 g)', '250 g'), multiplier: .25 },
-  piece: { key: 'piece', label: text('قطعة', 'Piece'), grams: text('1 قطعة', '1 piece'), multiplier: 1 },
-  jar: { key: 'jar', label: text('عبوة', 'Jar'), grams: text('1 عبوة', '1 jar'), multiplier: 1 },
-  bottle: { key: 'bottle', label: text('عبوة', 'Bottle'), grams: text('1 عبوة', '1 bottle'), multiplier: 1 },
-};
-const honeySizes = [quantities.kilo, quantities.half, quantities.ounce];
-const q = (key: string, arLabel: string, enLabel: string, arGrams: string, enGrams: string): QuantityOption =>
-  ({ key, label: text(arLabel, enLabel), grams: text(arGrams, enGrams), multiplier: 1 });
-
-const products: Product[] = [
-  { id: 'jarjeer', name: text('عسل الجرجير', 'Arugula Honey'), price: 26, image: '/images/arugula-honey-promo.jpg', category: 'honey', tone: text('داكن', 'Dark'), quantities: honeySizes },
-  { id: 'sidr', name: text('عسل سدر بيشاور', 'Peshawar Sidr Honey'), price: 24, image: '/images/peshawar-sidr-honey-promo.jpg', category: 'honey', tone: text('داكن', 'Dark'), quantities: honeySizes },
-  { id: 'black-seed', name: text('عسل حبة البركة', 'Black Seed Honey'), price: 12, image: '/images/black-seed-honey-promo.jpg', category: 'honey', tone: text('داكن', 'Dark'), quantities: honeySizes },
-  { id: 'shoukayat', name: text('عسل الشوكيات', 'Thistle Honey'), price: 22, image: '/images/IMG-20260916-WA0018_1789507618445.jpg', category: 'honey', tone: text('ذهبي', 'Golden'), quantities: honeySizes },
-  { id: 'spring', name: text('عسل أزهار الربيع', 'Spring Blossom Honey'), price: 22, image: '/images/spring-honey-product.webp', category: 'honey', tone: text('ذهبي', 'Golden'), quantities: honeySizes },
-  { id: 'white', name: text('عسل أبيض', 'White Honey'), price: 24, image: '/images/IMG-20260916-WA0010_1789507618319.jpg', category: 'honey', tone: text('فاتح', 'Light'), quantities: honeySizes },
-  { id: 'citrus', name: text('عسل الحمضيات', 'Citrus Honey'), price: 12, image: '/images/IMG-20260916-WA0011_1789507618360.jpg', category: 'honey', tone: text('ذهبي', 'Golden'), quantities: honeySizes },
-  { id: 'nuts', name: text('عسل المكسرات', 'Honey with Nuts'), price: 14, image: '/images/IMG-20260916-WA0004_1789507618408.jpg', category: 'honey', tone: text('داكن', 'Dark'), quantities: honeySizes },
-  { id: 'marar', name: text('عسل مرار', 'Marar Honey'), price: 22, image: '/images/marar-honey-product.webp', category: 'honey', tone: text('ذهبي', 'Golden'), quantities: honeySizes },
-  { id: 'royal-jelly', name: text('غذاء ملكات النحل', 'Royal Jelly'), price: 6, image: '/images/IMG-20260916-WA0009_1789507618253.jpg', category: 'bee', tone: text('١٠ غ', '10 g'), quantities: [q('jar', '١٠ غ', '10 g', 'عبوة', 'Jar')] },
-  { id: 'soap-honey', name: text('صابونة عسل', 'Honey Soap'), price: 3, image: '/images/IMG-20260916-WA0012_1789507618229.jpg', category: 'bee', tone: text('قطعة', 'Piece'), quantities: [quantities.piece] },
-  { id: 'soap-honey-pollen', name: text('صابونة العسل وحبوب اللقاح', 'Honey & Pollen Soap'), price: 3, image: '/images/IMG-20260916-WA0003_1789507618428.jpg', category: 'bee', tone: text('قطعة', 'Piece'), quantities: [quantities.piece] },
-  { id: 'soap-honey-propolis', name: text('صابونة العسل والعكبر', 'Honey & Propolis Soap'), price: 3, image: '/images/IMG-20260916-WA0017_1789507618164.jpg', category: 'bee', tone: text('قطعة', 'Piece'), quantities: [quantities.piece] },
-  { id: 'soap-royal-propolis', name: text('صابونة ملكية', 'Royal Soap'), price: 4, image: '/images/royal-bee-soap.jpg', category: 'bee', tone: text('قطعة', 'Piece'), quantities: [quantities.piece] },
-  { id: 'pollen', name: text('حبوب اللقاح', 'Bee Pollen'), price: 3, image: '/images/IMG-20260916-WA0008_1789507618298.jpg', category: 'bee', tone: text('١٠٠ غ', '100 g'), quantities: [q('jar', '١٠٠ غ', '100 g', 'عبوة', 'Jar')] },
-  { id: 'propolis-powder', name: text('عكبر مطحون نقي', 'Pure Ground Propolis'), price: 4, image: '/images/IMG-20260916-WA0005_1789507618342.jpg', category: 'bee', tone: text('عبوة', 'Jar'), quantities: [quantities.jar] },
-  { id: 'propolis-liquid', name: text('عكبر صمغ النحل السائل', 'Liquid Bee Propolis'), price: 4, image: '/images/IMG-20260916-WA0006_1789507618381.jpg', category: 'bee', tone: text('٣٠ مل', '30 ml'), quantities: [q('bottle', '٣٠ مل', '30 ml', 'عبوة', 'Bottle')] },
-  { id: 'dermoder-sunscreen', name: text('كريم Dermosoleil الواقي من الشمس', 'Dermosoleil Sunscreen'), price: 20, image: '/images/812990724_1383492617096993_3836960517116203646_n_1789665145339.jpg', category: 'dermoder', tone: text('SPF 50', 'SPF 50'), quantities: [q('bottle', 'عبوة', 'Bottle', '٥٠ مل', '50 ml')] },
-  { id: 'dermoder-innova-mask', name: text('ماسك Innova', 'Innova Mask'), price: 4, image: '/images/814050130_2139297053656146_4393227939445027234_n_1789665145340.jpg', category: 'dermoder', tone: text('ماسك', 'Mask'), quantities: [q('pack', 'عبوة', 'Pack', 'ماسك', 'Mask')] },
-  { id: 'dermoder-philogel', name: text('فيلوجيل Dermoder', 'Dermoder Philogel'), price: 22, image: '/images/796514301_1748235116483009_2134146397061566853_n_1789665145341.jpg', category: 'dermoder', tone: text('جل', 'Gel'), quantities: [q('tube', 'عبوة', 'Tube', 'جل', 'Gel')] },
-  { id: 'dermoder-hand-cream', name: text('كريم علاجي لليدين والأظافر', 'Therapeutic Hand & Nail Cream'), price: 4.75, image: '/images/805997552_1055504580696648_243007979501876567_n_1789665145342.jpg', category: 'dermoder', tone: text('كريم', 'Cream'), quantities: [q('jar', 'عبوة', 'Jar', 'كريم', 'Cream')] },
-  { id: 'dermoder-avocado-milk', name: text('حليب الأفوكادو للبشرة الجافة', 'Avocado Milk for Dry Skin'), price: 22, image: '/images/797415944_1593355299000210_3864108541652966378_n_1789665145344.jpg', category: 'dermoder', tone: text('بشرة جافة', 'Dry skin'), quantities: [q('bottle', 'عبوة', 'Bottle', 'حليب جسم', 'Body milk')] },
-  { id: 'dermoder-men-antiwrinkle', name: text('كريم رجالي مكثف للتجاعيد', "Men's Intensive Anti-Wrinkle Cream"), price: 18.75, image: '/images/808218460_1468370305115626_7927449223874735277_n_1789665145344.jpg', category: 'dermoder', tone: text('٥٠ مل', '50 ml'), quantities: [q('bottle', 'عبوة', 'Bottle', '٥٠ مل', '50 ml')] },
-  { id: 'dermoder-vitamin-c', name: text('سيروم فيتامين C', 'Vitamin C Serum'), price: 16.95, image: '/images/808321774_2310134333088039_1455991504232203143_n_1789665145345.jpg', category: 'dermoder', tone: text('سيروم', 'Serum'), quantities: [q('bottle', 'عبوة', 'Bottle', 'سيروم', 'Serum')] },
-  { id: 'dermoder-men-moisturizer', name: text('كريم مرطب ومغذي للرجال', "Men's Moisturizing & Nourishing Cream"), price: 18.75, image: '/images/813342497_1783965562920405_7690575191545740785_n_1789665145346.jpg', category: 'dermoder', tone: text('٥٠ مل', '50 ml'), quantities: [q('bottle', 'عبوة', 'Bottle', '٥٠ مل', '50 ml')] },
-  { id: 'dermoder-micellar-water', name: text('ماء ميسلار Dermoder', 'Dermoder Micellar Water'), price: 15.95, image: '/images/807843001_4445304622379248_8364832047836209826_n_1789665145347.jpg', category: 'dermoder', tone: text('٢٥٠ مل', '250 ml'), quantities: [q('bottle', 'عبوة', 'Bottle', '٢٥٠ مل', '250 ml')] },
-  { id: 'dermoder-cleansing-gel', name: text('جل مقشر ومنظف Dermoder', 'Dermoder Exfoliating Cleansing Gel'), price: 19.95, image: '/images/809585272_1123856079996861_5395134766329259573_n_1789665145348.jpg', category: 'dermoder', tone: text('٢٥٠ مل', '250 ml'), quantities: [q('bottle', 'عبوة', 'Bottle', '٢٥٠ مل', '250 ml')] },
-];
 
 const gallery: GalleryItem[] = [
   { src: '/images/IMG-20260913-WA0031_1789289463645.jpg', label: text('واجهة المحل من الخارج', 'Shop exterior') },
@@ -112,7 +68,7 @@ function ProductCard({ product, onImage, onAdd }: { product: Product; onImage: (
         <span className="absolute bottom-3 start-3 flex h-9 w-9 items-center justify-center rounded-full bg-[#f7e4b3] text-black opacity-0 group-hover:opacity-100"><Camera size={16} /></span>
       </div>
       <div className="relative z-20 flex min-h-[136px] flex-1 items-end justify-between gap-3 p-4">
-        <div><span className="product-category mb-2 inline-flex rounded-full border px-2.5 py-1 text-[11px] font-bold">{t(category)}</span><h3 className="font-display text-xl font-bold leading-tight text-[#f2dfb3]">{t(product.name)}</h3><p className="mt-2 text-xs text-zinc-400">{t(s.chooseQuantity)}</p></div>
+        <div><span className="product-category mb-2 inline-flex rounded-full border px-2.5 py-1 text-[11px] font-bold">{t(category)}</span><h3 className="font-display text-xl font-bold leading-tight text-[#f2dfb3]"><a className="focus-ring hover:underline" href={productPath(product.id)}>{t(product.name)}</a></h3><p className="mt-2 text-sm text-zinc-400">{t(product.description)}</p></div>
         <div className="shrink-0 text-end" dir={dir}><strong className="product-price font-display text-2xl">{money(price)}</strong><span className="block text-[10px] font-bold text-zinc-400">{t(selected.label)}</span></div>
       </div>
       <div className={`relative z-20 mx-4 mb-4 grid gap-1.5 rounded-xl border border-white/5 bg-[#141414] p-1 ${product.quantities.length > 2 ? 'grid-cols-3' : product.quantities.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`} role="group" aria-label={`${t(s.selectQuantity)} ${t(product.name)}`}>
