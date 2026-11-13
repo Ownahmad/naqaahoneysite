@@ -185,6 +185,34 @@ body { background-color: #fff; background-image: none; }
   .cart-added-icon { animation: cart-added .32s ease-out; }
 }
 
+/* ---------- Flying bees in the hero ---------- */
+.bees { position: absolute; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; display: none; }
+.bee-x, .bee-y { position: absolute; inset: 0; }
+.bee-face { position: absolute; top: 0; left: 0; }
+.bee { display: block; filter: drop-shadow(0 4px 6px rgb(0 0 0 / .35)); }
+.bee-wings { transform-box: fill-box; transform-origin: 50% 100%; }
+
+@keyframes bee-fly-x { from { transform: translateX(var(--x0)); } to { transform: translateX(var(--x1)); } }
+@keyframes bee-fly-y { from { transform: translateY(var(--y0)); } to { transform: translateY(var(--y1)); } }
+/* Face right on the outward leg, flip to face left on the way back. */
+@keyframes bee-turn { 0%, 49.9% { transform: scale(var(--s)) scaleX(1); } 50%, 100% { transform: scale(var(--s)) scaleX(-1); } }
+@keyframes bee-bob { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-5px) rotate(5deg); } }
+@keyframes bee-flap { from { transform: scaleY(1); } to { transform: scaleY(.3); } }
+
+.bee-1 { --x0: 4%;  --x1: 86%; --y0: 12%; --y1: 58%; --t: 15s; --ty: 7s;  --s: 1;   --d: -2s; }
+.bee-2 { --x0: 10%; --x1: 80%; --y0: 55%; --y1: 18%; --t: 19s; --ty: 9s;  --s: .85; --d: -11s; }
+.bee-3 { --x0: 30%; --x1: 92%; --y0: 30%; --y1: 78%; --t: 23s; --ty: 11s; --s: .65; --d: -6s; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .bees { display: block; }
+  .bee-x { animation: bee-fly-x var(--t) ease-in-out var(--d) infinite alternate; }
+  .bee-y { animation: bee-fly-y var(--ty) ease-in-out var(--d) infinite alternate; }
+  .bee-face { animation: bee-turn calc(var(--t) * 2) linear var(--d) infinite; }
+  .bee { animation: bee-bob 1.6s ease-in-out infinite; }
+  .bee-wings { animation: bee-flap .09s linear infinite alternate; }
+}
+@media (max-width: 639px) { .bee-3 { display: none; } }
+
 /* ---------- Motion: one orchestrated hero entrance, a living seal, and gentle scroll reveals ---------- */
 
 /* The Quran verse reads as poured honey: a warm gold gradient that slowly flows through the letters. */

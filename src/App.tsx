@@ -52,6 +52,34 @@ function WhatsAppLink({ children, className = '', product, quantity, price, mess
   return <a {...props} className={`focus-ring ${className}`} href={whatsapp(message ?? defaultMessage)}>{children}</a>;
 }
 
+function Bee() {
+  return (
+    <svg className="bee" viewBox="0 0 40 32" width="40" height="32" aria-hidden="true">
+      <g className="bee-wings" fill="#fffaf0" fillOpacity=".72" stroke="#f3dca6" strokeWidth=".8">
+        <ellipse cx="17" cy="8" rx="6.5" ry="8" transform="rotate(-18 17 8)" />
+        <ellipse cx="24" cy="8.5" rx="5.5" ry="7" transform="rotate(16 24 8.5)" />
+      </g>
+      <ellipse cx="20" cy="19" rx="11" ry="7.5" fill="#f2b632" />
+      <path d="M15 12.4v13.2M20.5 11.6v14.8M26 12.6v12.8" stroke="#2d1b12" strokeWidth="2.6" strokeLinecap="round" />
+      <circle cx="31" cy="18" r="4.6" fill="#2d1b12" />
+      <circle cx="32.6" cy="16.8" r="1.1" fill="#fff" />
+      <path d="M33 14c1.5-3 3.2-4 4.6-4.2M31.6 13.6c.6-3 1.8-4.6 3-5.2" stroke="#2d1b12" strokeWidth="1" fill="none" strokeLinecap="round" />
+      <path d="M8.6 19.4 5 20.6l3.4 1.4" fill="#2d1b12" />
+    </svg>
+  );
+}
+
+/* Bees drift across the hero on two independent loops (x and y), so each flight path curves naturally. */
+function FlyingBees() {
+  return (
+    <div className="bees" aria-hidden="true">
+      {[1, 2, 3].map(n => (
+        <div key={n} className={`bee-x bee-${n}`}><div className="bee-y"><div className="bee-face"><Bee /></div></div></div>
+      ))}
+    </div>
+  );
+}
+
 function BrandMark({ large = false, header = false }: { large?: boolean; header?: boolean }) {
   const { t, s } = useI18n();
   return (
@@ -288,8 +316,9 @@ function Home() {
       <section className="shop-hero relative overflow-hidden text-[#f7e4b5]">
         <img src={galleryPreview(gallery[0].src)} alt="" fetchPriority="low" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-[.08]" /><div className="absolute inset-0 hero-shade" />
         <div className="hero-gold-glow" aria-hidden="true" />
+        <FlyingBees />
         <div dir="rtl" className="hero-layout relative z-10 mx-auto max-w-7xl px-5 lg:px-10"><div dir={dir} className="hero-copy min-w-0 animate-rise-in"><p className="mb-4 flex items-center gap-3 text-sm font-bold tracking-[.12em] text-[#f0c56d]"><span className="h-px w-12 bg-[#f0c56d]" />{t(s.jordan)}</p><h1 className="hero-title text-[#edb547]">{t(s.brand)}<span className="block text-[.55em] text-white">{t(s.heroSub)}</span></h1><p className="hero-description mt-5 max-w-lg text-zinc-300">{t(s.heroCopy)}</p>
-          <div className="mt-6 flex flex-wrap items-center gap-3"><a href="#products" className="honey-button focus-ring inline-flex items-center gap-3 rounded-xl bg-[#d99c37] px-5 py-3.5 font-extrabold text-black">{t(s.browse)} <ArrowForward size={18} /></a><a href="#our-shop" className="focus-ring inline-flex items-center gap-3 rounded-xl border border-white/20 bg-black/40 px-5 py-3.5 font-bold text-white">{t(s.knowShop)} <ArrowUpRight size={18} /></a><a href={googleReviewsUrl} target="_blank" rel="noreferrer" className="focus-ring inline-flex items-center gap-2 rounded-xl border border-[#e0af4c]/50 bg-[#fff2d8] px-4 py-3.5 font-extrabold text-[#624115] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#f5dfb7]"><Star size={18} fill="currentColor" />{t(s.googleReviews)}</a></div>
+          <div className="mt-6 flex flex-wrap items-center gap-3"><a href="#products" className="honey-button focus-ring inline-flex items-center gap-3 rounded-xl bg-[#d99c37] px-5 py-3.5 font-extrabold text-black">{t(s.browse)} <ArrowForward size={18} /></a><a href={googleReviewsUrl} target="_blank" rel="noreferrer" className="google-review-button focus-ring inline-flex items-center gap-2 rounded-xl border px-4 py-3.5 font-bold transition hover:-translate-y-0.5"><Star size={18} fill="currentColor" className="text-[#f0c56d]" aria-hidden="true" />{t(s.googleReviews)}</a></div>
           <div className="hero-verse mt-3 w-full max-w-full text-center">
             <p lang="ar" dir="rtl" className="font-quran text-[2.6rem] leading-[1.7] text-[#f3d58d] [text-shadow:0_0_36px_rgba(224,175,76,.35)] lg:text-5xl">﴿فِيهِ شِفَاءٌ لِلنَّاسِ﴾</p>
             {language === 'en' && <p className="text-base italic leading-7 text-[#d9c394]">{t(s.quranTranslation)}</p>}

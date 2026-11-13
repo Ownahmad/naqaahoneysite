@@ -136,7 +136,17 @@
 .social-dock { bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
 
 .storefront-light .shop-hero .hero-title { color: #ffcd73; }
-.storefront-light .shop-hero a[href*="google.com/maps"] { color: var(--store-brown); }
+/* Secondary hero action: quiet outline so the gold "browse" button stays the one that shines. */
+.storefront-light .shop-hero .google-review-button {
+  color: var(--store-cream);
+  border-color: rgb(240 197 109 / .45);
+  background-color: rgb(255 255 255 / .04);
+}
+.storefront-light .shop-hero .google-review-button:hover {
+  border-color: #f0c56d;
+  background-color: rgb(240 197 109 / .12);
+}
+.storefront-light .shop-hero .google-review-button svg { color: #f0c56d; }
 
 .storefront-light .favorite-star {
   color: var(--store-brown);
