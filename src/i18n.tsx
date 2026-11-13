@@ -1,4 +1,3 @@
-import * as Dialog from '@radix-ui/react-dialog';
 import { createContext, type ReactNode, useContext, useEffect, useState } from 'react';
 
 export type Language = 'ar' | 'en';
@@ -126,9 +125,8 @@ type I18nContextValue = {
 const I18nContext = createContext<I18nContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [initial] = useState(storedLanguage);
-  const [language, setLanguageState] = useState<Language>(initial ?? 'ar');
-  const [needsChoice, setNeedsChoice] = useState(initial === null);
+  // Open in Arabic straight away; the header EN button switches language and the choice is remembered.
+  const [language, setLanguageState] = useState<Language>(() => storedLanguage() ?? 'ar');
   const dir = language === 'ar' ? 'rtl' : 'ltr';
 
   const setLanguage = (next: Language) => {
@@ -137,7 +135,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     document.documentElement.dir = nextDir;
     document.body.dir = nextDir;
     setLanguageState(next);
-    setNeedsChoice(false);
     try { window.localStorage.setItem(STORAGE_KEY, next); } catch { /* storage may be unavailable */ }
   };
 
@@ -160,32 +157,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   return (
     <I18nContext.Provider value={value}>
       {children}
-      <Dialog.Root open={needsChoice}>
-        <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-[100] bg-white" />
-          <Dialog.Content
-            dir="ltr"
-            className="fixed left-1/2 top-1/2 z-[101] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-[1.75rem] border border-[#d69b39]/40 bg-white p-7 text-center text-[#382919] shadow-2xl focus:outline-none sm:p-9"
-            onEscapeKeyDown={(event) => event.preventDefault()}
-            onPointerDownOutside={(event) => event.preventDefault()}
-            onInteractOutside={(event) => event.preventDefault()}
-          >
-            <img src="/logo.png" alt="شعار عسل النقاء | Pure Honey" className="mx-auto h-32 w-32 rounded-full border-2 border-[#d69b39]/70 bg-[#15110e] object-cover shadow-[0_10px_32px_rgba(90,53,15,.24)] sm:h-36 sm:w-36" />
-            <Dialog.Title className="mt-5 font-display text-2xl text-[#765020]">
-              <span lang="ar" dir="rtl" className="block">أهلاً بكم في عسل النقاء</span>
-              <span lang="en" dir="ltr" className="mt-2 block text-xl">Welcome to Pure Honey</span>
-            </Dialog.Title>
-            <Dialog.Description className="mt-3 text-sm leading-6 text-zinc-600">
-              <span lang="ar" dir="rtl" className="block">يرجى اختيار اللغة للمتابعة</span>
-              <span lang="en" dir="ltr" className="block">Please choose your language to continue</span>
-            </Dialog.Description>
-            <div className="mt-7 grid grid-cols-2 gap-3">
-              <button autoFocus type="button" lang="ar" dir="rtl" onClick={() => setLanguage('ar')} className="focus-ring rounded-xl bg-[#d69b39] px-3 py-3.5 font-extrabold text-black">العربية</button>
-              <button type="button" lang="en" dir="ltr" onClick={() => setLanguage('en')} className="focus-ring rounded-xl border border-[#d69b39]/50 bg-white px-3 py-3.5 font-bold text-[#765020]">English</button>
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
     </I18nContext.Provider>
   );
 }

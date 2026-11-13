@@ -181,6 +181,18 @@ body { background-color: #fff; background-image: none; }
 @media (min-width: 1024px) { .hero-product { width: min(100%, 19rem); } }
 .hero-product img { width: 100%; height: 100%; object-fit: contain; }
 
+/* Phones: lead with the honey photo (cropped to the hive frame and box) above the headline. */
+@media (max-width: 639px) {
+  .shop-hero { padding-top: 20px; }
+  .hero-layout { gap: 20px; }
+  .hero-visual { display: contents; }
+  .hero-product { order: -1; width: 100%; aspect-ratio: 4 / 3; }
+  .hero-product img { object-fit: cover; object-position: 50% 52%; }
+  .hero-seal { justify-self: center; }
+  /* Leave room so the floating cart / WhatsApp buttons never cover the footer's last line. */
+  #contact { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+}
+
 @keyframes cart-added {
   0%, 100% { transform: scale(1); }
   45% { transform: scale(1.28) rotate(-9deg); }

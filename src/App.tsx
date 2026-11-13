@@ -75,24 +75,24 @@ function ProductCard({ product, favorite, onFavorite, onAdd }: { product: Produc
   const category = product.category === 'honey' ? s.honey : product.category === 'bee' ? s.beeProducts : s.dermoder;
   return (
     <article className="product-card group relative flex h-full flex-col overflow-hidden rounded-[1.35rem] border border-white/10 bg-[#0a0a0a] shadow-xl transition-all hover:-translate-y-1 hover:border-white/20">
-      <button type="button" onClick={onFavorite} aria-pressed={favorite} aria-label={`${t(text('المفضلة', 'Favorites'))} · ${t(product.name)}`} className="favorite-star focus-ring absolute start-3 top-3 z-10 grid h-10 w-10 place-items-center rounded-full border">
-        <Star size={21} fill={favorite ? 'currentColor' : 'none'} aria-hidden="true" />
+      <button type="button" onClick={onFavorite} aria-pressed={favorite} aria-label={`${t(text('المفضلة', 'Favorites'))} · ${t(product.name)}`} className="favorite-star focus-ring absolute start-2 top-2 z-10 grid h-9 w-9 place-items-center rounded-full border sm:start-3 sm:top-3 sm:h-10 sm:w-10">
+        <Star size={19} fill={favorite ? 'currentColor' : 'none'} aria-hidden="true" />
       </button>
       <a href={productPath(product.id)} className="product-image-panel focus-ring relative flex aspect-[4/5] items-center justify-center overflow-hidden p-3">
         <img src={productThumbnail(product.id)} loading="lazy" decoding="async" alt={t(product.name)} className="image-lift h-full w-full object-contain" />
         {product.category !== 'honey' && <span className="absolute end-3 top-3 rounded-full border border-[#f1d28e]/20 bg-black/80 px-3 py-1 text-xs font-bold text-[#f4d58b]">{t(product.tone)}</span>}
         <span className="absolute bottom-3 start-3 flex h-9 w-9 items-center justify-center rounded-full bg-[#f7e4b3] text-black opacity-0 group-hover:opacity-100"><ArrowUpRight size={16} aria-hidden="true" /></span>
       </a>
-      <div className="relative z-20 flex min-h-[136px] flex-1 items-end justify-between gap-3 p-4">
-        <div><span className="product-category mb-2 inline-flex rounded-full border px-2.5 py-1 text-[11px] font-bold">{t(category)}</span><h3 className="font-display text-xl font-bold leading-tight text-[#f2dfb3]"><a className="focus-ring hover:underline" href={productPath(product.id)}>{t(product.name)}</a></h3><p className="mt-2 text-sm text-zinc-400">{t(product.description)}</p></div>
-        <div className="shrink-0 text-end" dir={dir}><strong className="product-price font-display text-2xl">{money(price)}</strong><span className="block text-[10px] font-bold text-zinc-400">{t(selected.label)}</span></div>
+      <div className="relative z-20 flex flex-1 flex-col justify-between gap-2 p-3 sm:min-h-[136px] sm:flex-row sm:items-end sm:gap-3 sm:p-4">
+        <div><span className="product-category mb-2 hidden rounded-full border px-2.5 py-1 text-[11px] font-bold sm:inline-flex">{t(category)}</span><h3 className="font-display text-base font-bold leading-tight text-[#f2dfb3] sm:text-xl"><a className="focus-ring hover:underline" href={productPath(product.id)}>{t(product.name)}</a></h3><p className="mt-2 hidden text-sm text-zinc-400 sm:block">{t(product.description)}</p></div>
+        <div className="shrink-0 sm:text-end" dir={dir}><strong className="product-price font-display text-xl sm:text-2xl">{money(price)}</strong><span className="block text-[10px] font-bold text-zinc-400">{t(selected.label)}</span></div>
       </div>
-      <div className={`relative z-20 mx-4 mb-4 grid gap-1.5 rounded-xl border border-white/5 bg-[#141414] p-1 ${product.quantities.length > 2 ? 'grid-cols-3' : product.quantities.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`} role="group" aria-label={`${t(s.selectQuantity)} ${t(product.name)}`}>
-        {product.quantities.map(item => <button key={item.key} type="button" onClick={() => setQuantityKey(item.key)} aria-pressed={quantityKey === item.key} className={`focus-ring rounded-lg px-2 py-2 text-xs font-extrabold ${quantityKey === item.key ? 'bg-[#b77c24] text-black' : 'text-[#c6ad81] hover:bg-[#222]'}`}><span dir="auto" className="block">{t(item.label)}</span>{t(item.grams) !== t(item.label) && <span dir="auto" className="mt-0.5 block text-[10px] font-normal opacity-75">{t(item.grams)}</span>}</button>)}
+      <div className={`relative z-20 mx-3 mb-3 grid gap-1 rounded-xl sm:mx-4 sm:mb-4 sm:gap-1.5 border border-white/5 bg-[#141414] p-1 ${product.quantities.length > 2 ? 'grid-cols-3' : product.quantities.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`} role="group" aria-label={`${t(s.selectQuantity)} ${t(product.name)}`}>
+        {product.quantities.map(item => <button key={item.key} type="button" onClick={() => setQuantityKey(item.key)} aria-pressed={quantityKey === item.key} className={`focus-ring rounded-lg px-1 py-2 text-[11px] font-extrabold sm:px-2 sm:text-xs ${quantityKey === item.key ? 'bg-[#b77c24] text-black' : 'text-[#c6ad81] hover:bg-[#222]'}`}><span dir="auto" className="block">{t(item.label)}</span>{t(item.grams) !== t(item.label) && <span dir="auto" className="mt-0.5 block text-[10px] font-normal opacity-75">{t(item.grams)}</span>}</button>)}
       </div>
-      <div className="relative z-20 mx-4 mb-4 grid gap-2">
-        <button type="button" onClick={() => onAdd(product, quantityKey, price)} className="honey-button flex w-full items-center justify-center gap-2 rounded-xl bg-[#d69b39] py-2.5 text-sm font-extrabold text-black" aria-label={`${t(s.addCart)} ${t(product.name)}`}>{t(s.addCart)} <ShoppingCart size={16} /></button>
-        <WhatsAppLink product={t(product.name)} quantity={t(selected.label)} price={money(price)} className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#141414] py-2.5 text-sm font-bold text-[#c6ad81] hover:bg-white/5">{t(s.orderWhatsapp)} <MessageCircle size={16} /></WhatsAppLink>
+      <div className="relative z-20 mx-3 mb-3 grid gap-2 sm:mx-4 sm:mb-4">
+        <button type="button" onClick={() => onAdd(product, quantityKey, price)} className="honey-button flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#d69b39] py-2.5 text-xs font-extrabold sm:gap-2 sm:text-sm text-black" aria-label={`${t(s.addCart)} ${t(product.name)}`}>{t(s.addCart)} <ShoppingCart size={16} /></button>
+        <WhatsAppLink product={t(product.name)} quantity={t(selected.label)} price={money(price)} className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-[#141414] px-1 py-2.5 text-xs font-bold sm:gap-2 sm:text-sm text-[#c6ad81] hover:bg-white/5">{t(s.orderWhatsapp)} <MessageCircle size={16} /></WhatsAppLink>
       </div>
     </article>
   );
@@ -115,7 +115,7 @@ function ProductCatalog({ filter, setFilter, favorites, onFavorite, onAdd }: { f
           </div>
         </div>
         {filter === 'favorites' && visible.length === 0 && <p className="rounded-2xl border border-white/10 p-5">{t(text('المفضلة فارغة. اضغط على نجمة أي منتج لإضافته.', 'Your favorites list is empty. Select a product’s star to save it.'))}</p>}
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{visible.map(product => <ProductCard key={product.id} product={product} favorite={favorites.includes(product.id)} onFavorite={() => onFavorite(product.id)} onAdd={onAdd} />)}</div>
+        <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">{visible.map(product => <ProductCard key={product.id} product={product} favorite={favorites.includes(product.id)} onFavorite={() => onFavorite(product.id)} onAdd={onAdd} />)}</div>
       </div>
     </section>
   );
@@ -261,12 +261,12 @@ function Home() {
         <span className="flex h-7 min-w-7 items-center justify-center rounded-full bg-white px-2 text-sm" dir="ltr">{cart.reduce((sum, item) => sum + item.count, 0)}</span>
       </button>}
       {!cartOpen && !lightbox && <nav className="social-dock fixed start-4 z-40 flex items-center gap-2 rounded-full border border-[#e7ddcd] bg-white/95 p-1.5 shadow-xl backdrop-blur-md" aria-label={t(s.contact)}>
-        <a href={facebookUrl} target="_blank" rel="noreferrer" aria-label={t(s.facebook)} title={t(s.facebook)} data-testid="link-social-facebook" className="social-facebook focus-ring flex h-10 w-10 items-center justify-center rounded-full border sm:h-11 sm:w-11"><Facebook size={20} /></a>
-        <a href={instagramUrl} target="_blank" rel="noreferrer" aria-label={t(s.instagram)} title={t(s.instagram)} data-testid="link-social-instagram" className="social-instagram focus-ring flex h-10 w-10 items-center justify-center rounded-full border sm:h-11 sm:w-11"><Instagram size={20} /></a>
+        <a href={facebookUrl} target="_blank" rel="noreferrer" aria-label={t(s.facebook)} title={t(s.facebook)} data-testid="link-social-facebook" className="social-facebook focus-ring hidden h-10 sm:flex w-10 items-center justify-center rounded-full border sm:h-11 sm:w-11"><Facebook size={20} /></a>
+        <a href={instagramUrl} target="_blank" rel="noreferrer" aria-label={t(s.instagram)} title={t(s.instagram)} data-testid="link-social-instagram" className="social-instagram focus-ring hidden h-10 sm:flex w-10 items-center justify-center rounded-full border sm:h-11 sm:w-11"><Instagram size={20} /></a>
         <WhatsAppLink aria-label="WhatsApp" title="WhatsApp" data-testid="link-social-whatsapp" className="social-whatsapp focus-ring flex h-10 w-10 items-center justify-center rounded-full border sm:h-11 sm:w-11"><MessageCircle size={20} /></WhatsAppLink>
       </nav>}
       <header className="relative z-30 border-b border-white/5 bg-black/60 text-[#f7e3b2] backdrop-blur-md">
-        <div className="mx-auto flex max-w-[1536px] flex-wrap items-center justify-between gap-2 px-3 py-3 sm:px-5 lg:px-10"><BrandMark large header />
+        <div className="mx-auto flex max-w-[1536px] flex-nowrap items-center sm:flex-wrap justify-between gap-2 px-3 py-3 sm:px-5 lg:px-10"><BrandMark large header />
           <nav className="hidden items-center gap-4 text-sm font-bold 2xl:flex" aria-label={t(s.mainNav)}>{nav.map(item => <a key={item.href + t(item.label)} href={item.href} onClick={() => item.filter && setFilter(item.filter)} className="focus-ring whitespace-nowrap py-2 hover:text-[#f5c766]">{t(item.label)}</a>)}</nav>
           <div className="flex max-w-full flex-wrap items-center gap-1.5 sm:gap-2">
             <LanguageSwitcher compact />
@@ -274,10 +274,10 @@ function Home() {
               { href: facebookUrl, label: s.facebook, Icon: Facebook, style: 'social-facebook' },
               { href: instagramUrl, label: s.instagram, Icon: Instagram, style: 'social-instagram' },
             ].map(({ href, label, Icon, style }) => (
-              <a key={href} href={href} target="_blank" rel="noreferrer" aria-label={t(label)} title={t(label)} className={`${style} focus-ring flex h-11 shrink-0 items-center justify-center gap-2 rounded-full border px-2.5 text-sm font-bold shadow-sm transition-all hover:-translate-y-0.5`}><Icon size={18} /><span className="hidden lg:inline">{t(label)}</span></a>
+              <a key={href} href={href} target="_blank" rel="noreferrer" aria-label={t(label)} title={t(label)} className={`${style} focus-ring hidden h-11 sm:flex shrink-0 items-center justify-center gap-2 rounded-full border px-2.5 text-sm font-bold shadow-sm transition-all hover:-translate-y-0.5`}><Icon size={18} /><span className="hidden lg:inline">{t(label)}</span></a>
             ))}
             <WhatsAppLink aria-label="WhatsApp" title="WhatsApp" data-testid="link-social-whatsapp-header" className="order-button focus-ring flex h-11 shrink-0 items-center justify-center gap-2 rounded-full border px-2.5 text-sm font-bold shadow-sm transition-all hover:-translate-y-0.5"><MessageCircle size={18} /><span className="hidden lg:inline">{t(s.orderNow)}</span></WhatsAppLink>
-            <a href={mapUrl} target="_blank" rel="noreferrer" aria-label={t(s.map)} title={t(s.map)} data-testid="link-social-location-header" className="social-location focus-ring flex h-11 shrink-0 items-center justify-center gap-2 rounded-full border px-2.5 text-sm font-bold shadow-sm transition-all hover:-translate-y-0.5"><MapPin size={18} /><span className="hidden lg:inline">{t(s.map)}</span></a>
+            <a href={mapUrl} target="_blank" rel="noreferrer" aria-label={t(s.map)} title={t(s.map)} data-testid="link-social-location-header" className="social-location focus-ring hidden h-11 sm:flex shrink-0 items-center justify-center gap-2 rounded-full border px-2.5 text-sm font-bold shadow-sm transition-all hover:-translate-y-0.5"><MapPin size={18} /><span className="hidden lg:inline">{t(s.map)}</span></a>
             <button onClick={() => setCartOpen(true)} className="focus-ring relative flex h-10 items-center justify-center gap-1 rounded-full border border-white/10 bg-[#111] px-2.5" aria-label={t(s.openCart)}><ShoppingCart size={18} className="text-[#f3cf82]" /><span className="hidden text-xs font-extrabold text-[#f3cf82] sm:inline">{t(s.cart)}</span>{cart.length > 0 && <span className="absolute -end-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#e4b95f] px-1 text-[10px] font-bold text-black">{cart.reduce((sum, item) => sum + item.count, 0)}</span>}</button>
             <button className="focus-ring flex h-10 w-10 items-center justify-center rounded-full border border-white/10 2xl:hidden" onClick={() => setMenu(!menu)} aria-label={t(menu ? s.closeMenu : s.openMenu)}>{menu ? <X /> : <Menu />}</button>
           </div>
@@ -307,7 +307,7 @@ function Home() {
         </div>
           <div className="hero-visual flex min-w-0 flex-col items-center">
             <div className="hero-product">
-              <img src="/images/naqaa-hero-360.webp" srcSet="/images/naqaa-hero-360.webp 360w, /images/naqaa-hero-720.webp 720w" sizes="(min-width: 1024px) 304px, (min-width: 640px) 40vw, 264px" decoding="async" alt={t(text('تصميم عسل النقاء مع خلية نحل وشعار المحل', 'Pure Honey artwork with a beehive and shop logo'))} width="1080" height="1920" fetchPriority="high" />
+              <img src="/images/naqaa-hero-360.webp" srcSet="/images/naqaa-hero-360.webp 360w, /images/naqaa-hero-720.webp 720w" sizes="(min-width: 1024px) 304px, (min-width: 640px) 40vw, calc(100vw - 40px)" decoding="async" alt={t(text('تصميم عسل النقاء مع خلية نحل وشعار المحل', 'Pure Honey artwork with a beehive and shop logo'))} width="1080" height="1920" fetchPriority="high" />
             </div>
             <a href="/images/quality-seal-black.jpg" className="hero-seal focus-ring flex min-w-0 items-center gap-3">
             <div className="hero-seal-image relative aspect-square overflow-hidden rounded-full border border-[#d5a955]/50 bg-[#111] shadow-[0_8px_28px_rgba(213,169,85,.18)]">
