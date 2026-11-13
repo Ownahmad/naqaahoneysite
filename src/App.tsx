@@ -307,7 +307,7 @@ function Home() {
         </div>
           <div className="hero-visual flex min-w-0 flex-col items-center">
             <div className="hero-product">
-              <img src="/images/naqaa-hero-360.webp" srcSet="/images/naqaa-hero-360.webp 360w, /images/naqaa-hero-720.webp 720w" sizes="(min-width: 1024px) 304px, (min-width: 640px) 40vw, calc(100vw - 40px)" decoding="async" alt={t(text('تصميم عسل النقاء مع خلية نحل وشعار المحل', 'Pure Honey artwork with a beehive and shop logo'))} width="1080" height="1920" fetchPriority="high" />
+              <img src="/images/IMG-20260913-WA0045_1789289463540-preview.webp" decoding="async" alt={t(text('رفوف العسل في محل عسل النقاء', 'Honey jars on the shelves at Pure Honey'))} width="570" height="760" fetchPriority="high" />
             </div>
             <a href="/images/quality-seal-black.jpg" className="hero-seal focus-ring flex min-w-0 items-center gap-3">
             <div className="hero-seal-image relative aspect-square overflow-hidden rounded-full border border-[#d5a955]/50 bg-[#111] shadow-[0_8px_28px_rgba(213,169,85,.18)]">
