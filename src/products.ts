@@ -2,13 +2,14 @@ import { text } from './i18n';
 
 type Localized = ReturnType<typeof text>;
 export type FilterKey = 'all' | 'honey' | 'bee' | 'dermoder';
-type QuantityOption = { key: string; label: Localized; grams: Localized; multiplier: number };
+// `short` is the chip text on phones, where the product grid is two columns wide.
+type QuantityOption = { key: string; label: Localized; grams: Localized; multiplier: number; short?: Localized };
 export type Product = { id: string; name: Localized; description: Localized; price: number; image: string; category: FilterKey; tone: Localized; quantities: QuantityOption[] };
 
 const quantities = {
   kilo: { key: 'kilo', label: text('1 kg', '1 kg'), grams: text('1 kg', '1 kg'), multiplier: 1 },
   half: { key: 'half', label: text('500 g', '500 g'), grams: text('500 g', '500 g'), multiplier: .5 },
-  ounce: { key: 'ounce', label: text('وقية (250 g)', '250 g'), grams: text('وقية (250 g)', '250 g'), multiplier: .25 },
+  ounce: { key: 'ounce', label: text('وقية (250 g)', '250 g'), grams: text('وقية (250 g)', '250 g'), multiplier: .25, short: text('250 g', '250 g') },
   piece: { key: 'piece', label: text('قطعة', 'Piece'), grams: text('1 قطعة', '1 piece'), multiplier: 1 },
   jar: { key: 'jar', label: text('عبوة', 'Jar'), grams: text('1 عبوة', '1 jar'), multiplier: 1 },
   bottle: { key: 'bottle', label: text('عبوة', 'Bottle'), grams: text('1 عبوة', '1 bottle'), multiplier: 1 },
