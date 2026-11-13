@@ -181,13 +181,16 @@ body { background-color: #fff; background-image: none; }
 @media (min-width: 1024px) { .hero-product { width: min(100%, 19rem); } }
 .hero-product img { width: 100%; height: 100%; object-fit: cover; }
 
-/* Phones: lead with the real shelf photo above the headline. */
+/* With no hero photo, the lab-testing seal fills the visual column on wider screens. */
+@media (min-width: 640px) {
+  .hero-seal { flex-direction: column; }
+  .hero-seal-image { width: clamp(150px, 20vw, 240px); }
+}
+
 @media (max-width: 639px) {
   .shop-hero { padding-top: 20px; }
   .hero-layout { gap: 20px; }
   .hero-visual { display: contents; }
-  .hero-product { order: -1; width: 100%; aspect-ratio: 4 / 3; }
-  .hero-product img { object-position: 50% 45%; }
   .hero-seal { justify-self: center; }
   /* Leave room so the floating cart / WhatsApp buttons never cover the footer's last line. */
   #contact { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }

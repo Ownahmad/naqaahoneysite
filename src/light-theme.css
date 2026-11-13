@@ -82,14 +82,52 @@
   background-color: var(--store-gold-hover);
   color: var(--store-brown);
 }
+/* Social buttons: each wears its platform colour as a translucent tint. */
+.social-facebook  { --social: 24 119 242; }   /* Facebook blue */
+.social-instagram { --social: 236 72 153; }   /* Instagram pink */
+.social-whatsapp  { --social: 37 211 102; }   /* WhatsApp green */
+.social-location  { --social: 234 67 53; }    /* Google Maps red */
+
 .storefront-light :is(.social-facebook, .social-instagram, .social-location, .social-whatsapp) {
-  border-color: var(--store-line);
-  background-color: var(--store-surface);
-  color: var(--store-ink);
+  border-color: rgb(var(--social) / .5);
+  background-color: rgb(var(--social) / .14);
+  color: rgb(var(--social));
+  transition: transform .2s ease, background-color .2s ease, box-shadow .2s ease;
+}
+/* On the dark header the icons need a lighter tone to stay readable. */
+.storefront-light header :is(.social-facebook, .social-instagram, .social-location, .social-whatsapp) {
+  background-color: rgb(var(--social) / .22);
+  color: color-mix(in srgb, rgb(var(--social)) 55%, white);
 }
 .storefront-light :is(.social-facebook, .social-instagram, .social-location, .social-whatsapp):hover {
-  text-decoration: underline;
-  text-underline-offset: .2em;
+  background-color: rgb(var(--social) / .28);
+  box-shadow: 0 6px 18px rgb(var(--social) / .35);
+}
+
+@keyframes social-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes social-ping {
+  0% { box-shadow: 0 0 0 0 rgb(var(--social) / .45); }
+  70%, 100% { box-shadow: 0 0 0 10px rgb(var(--social) / 0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* A gentle, staggered bob so the buttons feel alive without pulling focus. */
+  .storefront-light :is(.social-facebook, .social-instagram, .social-location, .social-whatsapp) {
+    animation: social-float 3s ease-in-out infinite;
+  }
+  .storefront-light .social-instagram { animation-delay: .3s; }
+  .storefront-light .social-whatsapp { animation-delay: .6s; }
+  .storefront-light .social-location { animation-delay: .9s; }
+  /* WhatsApp is how people order, so it also sends out a soft ring. */
+  .storefront-light .social-dock .social-whatsapp {
+    animation: social-float 3s ease-in-out .6s infinite, social-ping 2.4s ease-out infinite;
+  }
+  .storefront-light :is(.social-facebook, .social-instagram, .social-location, .social-whatsapp):hover {
+    animation: none;
+    transform: translateY(-3px) scale(1.08);
+  }
 }
 .storefront-light .order-button { border-color: var(--store-gold); }
 .storefront-light .focus-ring:focus-visible { outline-color: var(--store-ink); }

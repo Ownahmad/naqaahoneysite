@@ -276,7 +276,7 @@ function Home() {
             ].map(({ href, label, Icon, style }) => (
               <a key={href} href={href} target="_blank" rel="noreferrer" aria-label={t(label)} title={t(label)} className={`${style} focus-ring hidden h-11 sm:flex shrink-0 items-center justify-center gap-2 rounded-full border px-2.5 text-sm font-bold shadow-sm transition-all hover:-translate-y-0.5`}><Icon size={18} /><span className="hidden lg:inline">{t(label)}</span></a>
             ))}
-            <WhatsAppLink aria-label="WhatsApp" title="WhatsApp" data-testid="link-social-whatsapp-header" className="order-button focus-ring flex h-11 shrink-0 items-center justify-center gap-2 rounded-full border px-2.5 text-sm font-bold shadow-sm transition-all hover:-translate-y-0.5"><MessageCircle size={18} /><span className="hidden lg:inline">{t(s.orderNow)}</span></WhatsAppLink>
+            <WhatsAppLink aria-label="WhatsApp" title="WhatsApp" data-testid="link-social-whatsapp-header" className="social-whatsapp focus-ring flex h-11 shrink-0 items-center justify-center gap-2 rounded-full border px-2.5 text-sm font-bold shadow-sm transition-all hover:-translate-y-0.5"><MessageCircle size={18} /><span className="hidden lg:inline">{t(s.orderNow)}</span></WhatsAppLink>
             <a href={mapUrl} target="_blank" rel="noreferrer" aria-label={t(s.map)} title={t(s.map)} data-testid="link-social-location-header" className="social-location focus-ring hidden h-11 sm:flex shrink-0 items-center justify-center gap-2 rounded-full border px-2.5 text-sm font-bold shadow-sm transition-all hover:-translate-y-0.5"><MapPin size={18} /><span className="hidden lg:inline">{t(s.map)}</span></a>
             <button onClick={() => setCartOpen(true)} className="focus-ring relative flex h-10 items-center justify-center gap-1 rounded-full border border-white/10 bg-[#111] px-2.5" aria-label={t(s.openCart)}><ShoppingCart size={18} className="text-[#f3cf82]" /><span className="hidden text-xs font-extrabold text-[#f3cf82] sm:inline">{t(s.cart)}</span>{cart.length > 0 && <span className="absolute -end-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#e4b95f] px-1 text-[10px] font-bold text-black">{cart.reduce((sum, item) => sum + item.count, 0)}</span>}</button>
             <button className="focus-ring flex h-10 w-10 items-center justify-center rounded-full border border-white/10 2xl:hidden" onClick={() => setMenu(!menu)} aria-label={t(menu ? s.closeMenu : s.openMenu)}>{menu ? <X /> : <Menu />}</button>
@@ -306,9 +306,6 @@ function Home() {
           </nav>
         </div>
           <div className="hero-visual flex min-w-0 flex-col items-center">
-            <div className="hero-product">
-              <img src="/images/IMG-20260913-WA0045_1789289463540-preview.webp" decoding="async" alt={t(text('رفوف العسل في محل عسل النقاء', 'Honey jars on the shelves at Pure Honey'))} width="570" height="760" fetchPriority="high" />
-            </div>
             <a href="/images/quality-seal-black.jpg" className="hero-seal focus-ring flex min-w-0 items-center gap-3">
             <div className="hero-seal-image relative aspect-square overflow-hidden rounded-full border border-[#d5a955]/50 bg-[#111] shadow-[0_8px_28px_rgba(213,169,85,.18)]">
               <img src="/images/quality-seal-preview.webp" loading="lazy" decoding="async" alt={t(text('ختم نقابة النحالين الأردنيين ورمز QR للتتبع', 'Jordanian Beekeepers Association seal and traceability QR code'))} className="absolute h-auto max-w-none" style={{ width: '160%', left: '-33.33%', top: '-63.33%' }} />
