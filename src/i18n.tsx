@@ -173,7 +173,7 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
     <button
       type="button"
       onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
-      className="focus-ring flex h-10 shrink-0 items-center justify-center rounded-full border border-[#e4b95f]/35 bg-black/40 px-3 text-xs font-extrabold text-[#f3cf82] transition-colors hover:bg-[#d29432] hover:text-black"
+      className="focus-ring flex h-9 shrink-0 items-center justify-center rounded-full border border-[#e4b95f]/35 bg-black/40 px-2.5 sm:h-10 sm:px-3 text-xs font-extrabold text-[#f3cf82] transition-colors hover:bg-[#d29432] hover:text-black"
       aria-label={t(s.switchLanguage)}
       title={t(s.switchLanguage)}
       data-testid="button-language"
