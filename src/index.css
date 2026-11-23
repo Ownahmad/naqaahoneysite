@@ -213,6 +213,18 @@ body { background-color: #fff; background-image: none; }
 }
 @media (max-width: 639px) { .bee-3 { display: none; } }
 
+/* ---------- 3D bee that follows the shopper while scrolling (above the page, below the cart button and drawers) ---------- */
+.scroll-bee { position: fixed; inset: 0; z-index: 35; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity 1.2s ease; }
+.scroll-bee.is-ready { opacity: 1; }
+/* Close button that flies beside the bee (position set every frame from the 3D scene). */
+.scroll-bee-close {
+  position: fixed; top: 0; left: 0; z-index: 36; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  border-radius: 999px; border: 1.5px solid rgb(183 124 36 / .55); background: rgb(255 250 240 / .92); color: #49351e;
+  box-shadow: 0 4px 12px rgb(0 0 0 / .25); cursor: pointer; will-change: transform; animation: bee-close-in .6s ease both;
+}
+.scroll-bee-close:hover { background: #d99c37; color: #241a0f; }
+@keyframes bee-close-in { from { opacity: 0; } to { opacity: 1; } }
+
 /* ---------- Motion: one orchestrated hero entrance, a living seal, and gentle scroll reveals ---------- */
 
 /* The Quran verse reads as poured honey: a warm gold gradient that slowly flows through the letters. */

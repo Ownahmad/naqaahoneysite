@@ -134,6 +134,27 @@
 
 .floating-cart { bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
 .social-dock { bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+/* Very narrow phones: cart shows icon + count only so it never collides with the 4-button dock. */
+@media (max-width: 379px) { .floating-cart .cart-label { display: none; } }
+
+/* Shop location: a solid Google-Maps-red pill with a white pin badge, so it reads as "go here". */
+.storefront-light .location-pill.social-location {
+  border-color: transparent;
+  background: linear-gradient(135deg, #ef5a4c, #c5221f);
+  color: #fff;
+  box-shadow: 0 6px 16px rgb(197 34 31 / .35);
+}
+.storefront-light .location-pill.social-location:hover {
+  background: linear-gradient(135deg, #f26a5d, #b31d1a);
+  box-shadow: 0 10px 22px rgb(197 34 31 / .45);
+}
+.location-pill-icon { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #fff; color: #c5221f; flex: none; }
+@media (max-width: 639px) { .location-pill-icon { width: auto; height: auto; background: none; color: inherit; } }
+.storefront-light .social-dock .location-pin.social-location { background: #ea4335; border-color: #ea4335; color: #fff; }
+@media (prefers-reduced-motion: no-preference) {
+  .location-pill-icon svg, .storefront-light .social-dock .location-pin svg { animation: pin-drop 2.6s ease-in-out infinite; }
+}
+@keyframes pin-drop { 0%, 70%, 100% { transform: translateY(0); } 80% { transform: translateY(-3px); } 90% { transform: translateY(1px); } }
 
 .storefront-light .shop-hero .hero-title { color: #ffcd73; }
 /* Secondary hero action: quiet outline so the gold "browse" button stays the one that shines. */

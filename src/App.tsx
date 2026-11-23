@@ -1,6 +1,7 @@
 import { type AnchorHTMLAttributes, type ReactNode, useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
+import { ScrollBee } from '@/components/scroll-bee';
 import { Toaster } from '@/components/ui/toaster';
 import { ToastAction } from '@/components/ui/toast';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -282,17 +283,20 @@ function Home() {
   const ArrowForward = dir === 'rtl' ? ArrowLeft : ArrowRight;
   return (
     <main id="top" dir={dir} className="storefront-light overflow-hidden">
+      <ScrollBee />
       <Cart open={cartOpen} close={() => setCartOpen(false)} cart={cart} update={(id, delta) => setCart(items => items.map(item => item.id === id ? { ...item, count: Math.max(1, item.count + delta) } : item))} remove={id => setCart(items => items.filter(item => item.id !== id))} clear={() => setCart([])} />
-      {!cartOpen && !lightbox && <button type="button" onClick={() => setCartOpen(true)} aria-label={t(s.openCart)} data-testid="button-floating-cart" className="floating-cart focus-ring fixed end-4 z-40 flex items-center gap-2 rounded-full border border-[#b77c24]/30 bg-[#d99c37] px-3 py-3.5 font-bold text-[#241a0f] shadow-xl transition-transform hover:-translate-y-1 sm:end-6 sm:gap-3 sm:px-5">
+      {/* Floating cart + social dock stay on screen all the time; the cart drawer and lightbox (z-50) simply cover them. */}
+      <button type="button" onClick={() => setCartOpen(true)} aria-label={t(s.openCart)} data-testid="button-floating-cart" className="floating-cart focus-ring fixed end-4 z-40 flex items-center gap-2 rounded-full border border-[#b77c24]/30 bg-[#d99c37] px-3 py-3.5 font-bold text-[#241a0f] shadow-xl transition-transform hover:-translate-y-1 sm:end-6 sm:gap-3 sm:px-5">
         <ShoppingCart key={cartAnimation} size={22} className={cartAnimation ? "cart-added-icon" : undefined} aria-hidden="true" />
-        <span>{t(s.cart)}</span>
+        <span className="cart-label">{t(s.cart)}</span>
         <span className="flex h-7 min-w-7 items-center justify-center rounded-full bg-white px-2 text-sm" dir="ltr">{cart.reduce((sum, item) => sum + item.count, 0)}</span>
-      </button>}
-      {!cartOpen && !lightbox && <nav className="social-dock fixed start-4 z-40 flex items-center gap-2 rounded-full border border-[#e7ddcd] bg-white/95 p-1.5 shadow-xl backdrop-blur-md" aria-label={t(s.contact)}>
+      </button>
+      <nav className="social-dock fixed start-4 z-40 flex items-center gap-2 rounded-full border border-[#e7ddcd] bg-white/95 p-1.5 shadow-xl backdrop-blur-md" aria-label={t(s.contact)}>
         <a href={facebookUrl} target="_blank" rel="noreferrer" aria-label={t(s.facebook)} title={t(s.facebook)} data-testid="link-social-facebook" className="social-facebook focus-ring flex h-10 w-10 items-center justify-center rounded-full border sm:h-11 sm:w-11"><Facebook size={20} /></a>
         <a href={instagramUrl} target="_blank" rel="noreferrer" aria-label={t(s.instagram)} title={t(s.instagram)} data-testid="link-social-instagram" className="social-instagram focus-ring flex h-10 w-10 items-center justify-center rounded-full border sm:h-11 sm:w-11"><Instagram size={20} /></a>
         <WhatsAppLink aria-label="WhatsApp" title="WhatsApp" data-testid="link-social-whatsapp" className="social-whatsapp focus-ring flex h-10 w-10 items-center justify-center rounded-full border sm:h-11 sm:w-11"><MessageCircle size={20} /></WhatsAppLink>
-      </nav>}
+        <a href={mapUrl} target="_blank" rel="noreferrer" aria-label={t(s.map)} title={t(s.map)} data-testid="link-social-location" className="social-location location-pin focus-ring flex h-10 w-10 items-center justify-center rounded-full border sm:h-11 sm:w-11"><MapPin size={20} /></a>
+      </nav>
       <header className="relative z-30 border-b border-white/5 bg-black/60 text-[#f7e3b2] backdrop-blur-md">
         <div className="mx-auto flex max-w-[1536px] flex-nowrap items-center sm:flex-wrap justify-between gap-2 px-3 py-3 sm:px-5 lg:px-10"><BrandMark large header />
           <nav className="hidden items-center gap-4 text-sm font-bold 2xl:flex" aria-label={t(s.mainNav)}>{nav.map(item => <a key={item.href + t(item.label)} href={item.href} onClick={() => item.filter && setFilter(item.filter)} className="focus-ring whitespace-nowrap py-2 hover:text-[#f5c766]">{t(item.label)}</a>)}</nav>
@@ -305,7 +309,7 @@ function Home() {
               <a key={href} href={href} target="_blank" rel="noreferrer" aria-label={t(label)} title={t(label)} className={`${style} focus-ring flex h-9 w-9 sm:h-11 sm:w-auto shrink-0 items-center justify-center gap-2 rounded-full border sm:px-2.5 text-sm font-bold shadow-sm transition-all hover:-translate-y-0.5`}><Icon size={18} /><span className="hidden lg:inline">{t(label)}</span></a>
             ))}
             <WhatsAppLink aria-label="WhatsApp" title="WhatsApp" data-testid="link-social-whatsapp-header" className="social-whatsapp focus-ring flex h-9 w-9 sm:h-11 sm:w-auto shrink-0 items-center justify-center gap-2 rounded-full border sm:px-2.5 text-sm font-bold shadow-sm transition-all hover:-translate-y-0.5"><MessageCircle size={18} /><span className="hidden lg:inline">{t(s.orderNow)}</span></WhatsAppLink>
-            <a href={mapUrl} target="_blank" rel="noreferrer" aria-label={t(s.map)} title={t(s.map)} data-testid="link-social-location-header" className="social-location focus-ring hidden h-11 sm:flex shrink-0 items-center justify-center gap-2 rounded-full border px-2.5 text-sm font-bold shadow-sm transition-all hover:-translate-y-0.5"><MapPin size={18} /><span className="hidden lg:inline">{t(s.map)}</span></a>
+            <a href={mapUrl} target="_blank" rel="noreferrer" aria-label={t(s.map)} title={t(s.map)} data-testid="link-social-location-header" className="social-location location-pill focus-ring flex h-9 w-9 sm:h-11 sm:w-auto shrink-0 items-center justify-center gap-2 rounded-full border sm:ps-2 sm:pe-4 text-sm font-extrabold"><span className="location-pill-icon"><MapPin size={16} /></span><span className="hidden sm:inline">{t(s.map)}</span></a>
             <button onClick={() => setCartOpen(true)} className="focus-ring relative flex h-9 w-9 items-center justify-center gap-1 rounded-full border border-white/10 bg-[#111] sm:h-10 sm:w-auto sm:px-2.5" aria-label={t(s.openCart)}><ShoppingCart size={18} className="text-[#f3cf82]" /><span className="hidden text-xs font-extrabold text-[#f3cf82] sm:inline">{t(s.cart)}</span>{cart.length > 0 && <span className="absolute -end-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#e4b95f] px-1 text-[10px] font-bold text-black">{cart.reduce((sum, item) => sum + item.count, 0)}</span>}</button>
             <button className="focus-ring flex h-9 w-9 items-center justify-center rounded-full border border-white/10 sm:h-10 sm:w-10 2xl:hidden" onClick={() => setMenu(!menu)} aria-label={t(menu ? s.closeMenu : s.openMenu)}>{menu ? <X /> : <Menu />}</button>
           </div>
