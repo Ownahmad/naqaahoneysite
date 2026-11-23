@@ -33,6 +33,8 @@ function readFavorites(): string[] {
 }
 const offersLabel = text('البكجات والعروض', 'Bundles & offers');
 const galleryPreview = (src: string) => src.replace(/\.jpg$/, '-preview.webp');
+// Full-screen size (max 1600px webp, ~5x lighter than the original camera photo).
+const galleryLarge = (src: string) => src.replace(/\.(jpe?g|png)$/i, '-large.webp');
 
 type GalleryItem = { src: string; label: Localized };
 
@@ -168,7 +170,7 @@ function Lightbox({ items, index, setIndex, close }: { items: GalleryItem[]; ind
     <div dir={dir} className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 backdrop-blur-md" role="dialog" aria-modal="true" aria-label={t(item.label)} onClick={close}>
       <button onClick={close} className="focus-ring absolute end-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-[#f0c56a] text-black" aria-label={t(s.closeImage)}><X /></button>
       <button onClick={event => { event.stopPropagation(); setIndex((index - 1 + items.length) % items.length); }} className="focus-ring absolute start-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/60 text-[#f0c56a]" aria-label={t(s.previousImage)}>{dir === 'rtl' ? <ChevronRight /> : <ChevronLeft />}</button>
-      <figure onClick={event => event.stopPropagation()}><img src={item.src} alt={t(item.label)} className="max-h-[78vh] max-w-[85vw] rounded-xl object-contain" /><figcaption className="mt-4 text-center font-display text-lg text-[#f5d995]">{t(item.label)} <span className="text-sm text-zinc-500">({number(index + 1)} / {number(items.length)})</span></figcaption></figure>
+      <figure onClick={event => event.stopPropagation()}><img src={galleryLarge(item.src)} decoding="async" alt={t(item.label)} className="max-h-[78vh] max-w-[85vw] rounded-xl object-contain" /><figcaption className="mt-4 text-center font-display text-lg text-[#f5d995]">{t(item.label)} <span className="text-sm text-zinc-500">({number(index + 1)} / {number(items.length)})</span></figcaption></figure>
       <button onClick={event => { event.stopPropagation(); setIndex((index + 1) % items.length); }} className="focus-ring absolute end-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/60 text-[#f0c56a]" aria-label={t(s.nextImage)}>{dir === 'rtl' ? <ChevronLeft /> : <ChevronRight />}</button>
     </div>
   );

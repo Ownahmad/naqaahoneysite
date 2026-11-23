@@ -98,10 +98,20 @@ export function startScrollBee(canvas: HTMLCanvasElement, opts: { modelUrl: stri
   flight.add(beeRoot);
   scene.add(flight);
 
+  // The canvas is only a small square that travels with the bee (not the whole screen), so the GPU
+  // draws a few hundred pixels a frame instead of every pixel on the page. The camera still frames
+  // the full window; setViewOffset renders just the square around the bee.
+  let box = 0;
+  const setBox = (px: number) => {
+    const next = Math.max(64, Math.ceil(px / 16) * 16);
+    if (next === box) return;
+    box = next;
+    renderer.setSize(box, box, false);
+    canvas.style.width = canvas.style.height = `${box}px`;
+  };
   let mobile = innerWidth < 760;
   const resize = () => {
     mobile = innerWidth < 760;
-    renderer.setSize(innerWidth, innerHeight, false);
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
   };
@@ -235,14 +245,21 @@ export function startScrollBee(canvas: HTMLCanvasElement, opts: { modelUrl: stri
       f.g.rotation.x = -0.25 + a * 0.95;
       f.g.rotation.y = a * 0.18;
     }
+    // Screen position (CSS px) of the bee's centre, from the full-window projection.
+    const depth = camera.position.z - flight.position.z;
+    const halfHAt = Math.tan(MathUtils.degToRad(camera.fov / 2)) * depth;
+    const sx = (flight.position.x / (halfHAt * camera.aspect) + 1) / 2 * innerWidth;
+    const sy = (1 - flight.position.y / halfHAt) / 2 * innerHeight;
+    const beePx = (size * cur.s) / (halfHAt * 2) * innerHeight;
+    // Wings, tilt and the hover bob all stay inside ~2.4x the body size.
+    setBox(beePx * 2.4);
+    const x0 = Math.round(sx - box / 2), y0 = Math.round(sy - box / 2);
+    camera.setViewOffset(innerWidth, innerHeight, x0, y0, box, box);
+    canvas.style.transform = `translate3d(${x0}px, ${y0}px, 0)`;
     renderer.render(scene, camera);
-    if (opts.onMove) {
-      // Screen position (CSS px) of the bee's centre, so the page can keep its close button beside it.
-      screenPos.copy(flight.position).project(camera);
-      opts.onMove((screenPos.x + 1) / 2 * innerWidth, (1 - screenPos.y) / 2 * innerHeight, (size * cur.s) / (halfH * 2) * innerHeight);
-    }
+    // Lets the page keep its close button beside the bee.
+    opts.onMove?.(sx, sy, beePx);
   };
-  const screenPos = new Vector3();
   raf = requestAnimationFrame(frame);
 
   return () => {

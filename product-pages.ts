@@ -7,6 +7,8 @@ const site = 'https://honeynaqaa.com';
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, char => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 }[char]!));
+// The page shows the light webp copy; og:image and the sitemap keep the original jpg for link previews.
+const largeImage = (src: string) => src.replace(/\.(jpe?g|png)$/i, '-large.webp');
 
 function renderProduct(product: Product) {
   const url = site + productPath(product.id);
@@ -47,7 +49,8 @@ function renderProduct(product: Product) {
   <title>${title}</title>
   <meta name="description" content="${description}">
   <link rel="canonical" href="${url}">
-  <link rel="icon" href="/logo.png">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="preload" as="image" href="${escapeHtml(largeImage(product.image))}">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
   <meta property="og:image" content="${image}">
@@ -56,9 +59,9 @@ function renderProduct(product: Product) {
   <link rel="stylesheet" href="/product-page.css">
 </head>
 <body>
-  <header><a href="/"><img src="/logo.png" alt="" width="48" height="48">عسل النقاء</a></header>
+  <header><a href="/"><img src="/images/brand-logo.webp" alt="" width="48" height="48">عسل النقاء</a></header>
   <main>
-    <img class="product-photo" src="${escapeHtml(product.image)}" alt="${name} من عسل النقاء">
+    <img class="product-photo" src="${escapeHtml(largeImage(product.image))}" decoding="async" alt="${name} من عسل النقاء">
     <div>
       <a href="/#products">جميع المنتجات</a>
       <h1>${name}</h1>
